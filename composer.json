@@ -1,0 +1,25 @@
+{
+  "name": "be/app-aiwriter",
+  "type": "library",
+  "description": "AI 作家",
+  "keywords": [
+    "OpenAI",
+    "ChatGPT"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "1024i team",
+      "email": "1024i@1024i.com",
+      "homepage": "https://www.1024i.com/team"
+    }
+  ],
+  "require": {
+    "be/be": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Be\\App\\AiWriter\\": "src/"
+    }
+  }
+}
