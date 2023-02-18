@@ -3,8 +3,8 @@
   "type": "library",
   "description": "AI 作家",
   "keywords": [
-    "OpenAI",
-    "ChatGPT"
+    "AI",
+    "作家"
   ],
   "license": "MIT",
   "authors": [
@@ -15,7 +15,8 @@
     }
   ],
   "require": {
-    "be/be": "*"
+    "be/be": "*",
+    "be/app-openai": "*"
   },
   "autoload": {
     "psr-4": {

@@ -2,7 +2,7 @@
 
 ## 应用简介
 
-    be/app-aiwriter AI作家，使用人工智进行创作，
+    be/app-aiwriter AI作家，借助人工智能（如OpenAI ChatGPT）自动化海量生产内容，创作，改编等。
 
 ## 如何安装
 
