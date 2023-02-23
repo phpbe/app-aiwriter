@@ -6,7 +6,6 @@ use Be\AdminPlugin\Detail\Item\DetailItemHtml;
 use Be\AdminPlugin\Form\Item\FormItemInput;
 use Be\AdminPlugin\Form\Item\FormItemInputTextArea;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
-use Be\AdminPlugin\Form\Item\FormItemSwitch;
 use Be\AdminPlugin\Form\Item\FormItemTinymce;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
@@ -32,6 +31,11 @@ class Material extends Auth
     {
 
         $categoryKeyValues = Be::getService('App.AiWriter.Admin.MaterialCategory')->getCategoryKeyValues();
+        $categoryKeyValues = \Be\Util\Arr::merge([
+            '' => '未分类',
+        ], $categoryKeyValues);
+
+        $categoryId = Be::getRequest()->get('category_id', 'all');
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => '素材',
@@ -50,7 +54,12 @@ class Material extends Auth
                             'name' => 'category_id',
                             'label' => '分类',
                             'driver' => FormItemSelect::class,
-                            'keyValues' => $categoryKeyValues,
+                            'keyValues' => \Be\Util\Arr::merge([
+                                'all' => '全部',
+                            ], $categoryKeyValues),
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                            'value' => $categoryId,
                         ],
                     ],
                 ],
@@ -145,6 +154,11 @@ class Material extends Auth
                             ],
                         ],
                         [
+                            'name' => 'category_id',
+                            'label' => '分类',
+                            'keyValues' => $categoryKeyValues,
+                        ],
+                        [
                             'name' => 'create_time',
                             'label' => '创建时间',
                             'width' => '180',
@@ -210,11 +224,11 @@ class Material extends Auth
                         [
                             'name' => 'title',
                             'label' => '标题',
-                            'driver' => FormItemInput::class,
                             'ui' => [
                                 'maxlength' => 120,
                                 'show-word-limit' => true,
                             ],
+                            'required' => true,
                         ],
                         [
                             'name' => 'summary',
@@ -254,6 +268,7 @@ class Material extends Auth
                                 'maxlength' => 120,
                                 'show-word-limit' => true,
                             ],
+                            'required' => true,
                         ],
                         [
                             'name' => 'summary',
