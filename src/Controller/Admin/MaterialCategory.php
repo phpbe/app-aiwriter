@@ -40,11 +40,6 @@ class MaterialCategory extends Auth
 
             'grid' => [
                 'title' => '分类',
-
-                'filter' => [
-                    ['is_delete', '=', '0'],
-                ],
-
                 'orderBy' => 'ordering',
                 'orderByDir' => 'ASC',
 

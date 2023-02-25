@@ -16,7 +16,7 @@ class MaterialCategory
      */
     public function getCategories(): array
     {
-        $sql = 'SELECT * FROM aiwriter_material_category WHERE is_delete = 0 ORDER BY ordering ASC';
+        $sql = 'SELECT * FROM aiwriter_material_category ORDER BY ordering ASC';
         $categories = Be::getDb()->getObjects($sql);
         return $categories;
     }
@@ -29,7 +29,7 @@ class MaterialCategory
      */
     public function getCategory(string $categoryId): object
     {
-        $sql = 'SELECT * FROM aiwriter_material_category WHERE id=? AND is_delete = 0';
+        $sql = 'SELECT * FROM aiwriter_material_category WHERE id=?';
         $category = Be::getDb()->getObject($sql, [$categoryId]);
         if (!$category) {
             throw new ServiceException('分类（# ' . $categoryId . '）不存在！');
@@ -47,7 +47,7 @@ class MaterialCategory
      */
     public function getCategoryKeyValues(): array
     {
-        $sql = 'SELECT id, `name` FROM aiwriter_material_category WHERE is_delete = 0 ORDER BY ordering ASC';
+        $sql = 'SELECT id, `name` FROM aiwriter_material_category ORDER BY ordering ASC';
         return Be::getDb()->getKeyValues($sql);
     }
 

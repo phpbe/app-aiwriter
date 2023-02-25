@@ -44,6 +44,7 @@ class Material extends Auth
                 'title' => '素材管理',
                 'orderBy' => 'create_time',
                 'orderByDir' => 'DESC',
+
                 'form' => [
                     'items' => [
                         [
@@ -123,7 +124,7 @@ class Material extends Auth
                     'items' => [
                         [
                             'label' => '批量删除',
-                            'action' => 'delete',
+                            'task' => 'delete',
                             'target' => 'ajax',
                             'confirm' => '此操作将从数据库彻底删除，确认要执行么？',
                             'ui' => [
@@ -199,12 +200,8 @@ class Material extends Auth
                                 ],
                                 'icon' => 'el-icon-delete',
                                 'confirm' => '确认要删除么？',
-                                'task' => 'fieldEdit',
+                                'task' => 'delete',
                                 'target' => 'ajax',
-                                'postData' => [
-                                    'field' => 'is_delete',
-                                    'value' => 1,
-                                ],
                             ],
                         ]
                     ],
