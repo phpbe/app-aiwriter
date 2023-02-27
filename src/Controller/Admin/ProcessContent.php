@@ -27,6 +27,8 @@ class ProcessContent extends Auth
      */
     public function index()
     {
+        $processKeyValues = Be::getService('App.AiWriter.Admin.Process')->getProcessKeyValues();
+        $processId = Be::getRequest()->get('process_id', 'all');
         Be::getAdminPlugin('Curd')->setting([
             'label' => '加工结果',
             'table' => 'aiwriter_process_content',
@@ -40,6 +42,17 @@ class ProcessContent extends Auth
                         [
                             'name' => 'title',
                             'label' => '标题',
+                        ],
+                        [
+                            'name' => 'process_id',
+                            'label' => '分类',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => \Be\Util\Arr::merge([
+                                'all' => '全部',
+                            ], $processKeyValues),
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                            'value' => $processId,
                         ],
                     ],
                 ],
@@ -68,8 +81,8 @@ class ProcessContent extends Auth
                             'width' => '50',
                         ],
                         [
-                            'name' => 'name',
-                            'label' => '名称',
+                            'name' => 'title',
+                            'label' => '标题',
                             'driver' => TableItemLink::class,
                             'align' => 'left',
                             'task' => 'detail',
@@ -77,6 +90,11 @@ class ProcessContent extends Auth
                             'drawer' => [
                                 'width' => '80%'
                             ],
+                        ],
+                        [
+                            'name' => 'process_id',
+                            'label' => '加工任务',
+                            'keyValues' => $processKeyValues,
                         ],
                         [
                             'name' => 'create_time',
@@ -166,15 +184,9 @@ class ProcessContent extends Auth
                                 'label' => 'ID',
                             ],
                             [
-                                'name' => 'category',
-                                'label' => '分类',
-                                'value' => function ($row) use($categoryKeyValues) {
-                                    if ($row['category_id'] === '') {
-                                        return '未分类';
-                                    }
-
-                                    return $categoryKeyValues[$row['category_id']] ?? '';
-                                }
+                                'name' => 'process_id',
+                                'label' => '加工任务',
+                                'keyValues' => $processKeyValues,
                             ],
                             [
                                 'name' => 'title',

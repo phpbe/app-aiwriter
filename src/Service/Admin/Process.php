@@ -282,10 +282,20 @@ class Process
             $details['summary']['ai'] = '';
         }
 
-
         $tupleProcess->details = $details;
 
         return $tupleProcess->toObject();
+    }
+
+    /**
+     * 获取加工任务键值对
+     *
+     * @return array
+     */
+    public function getProcessKeyValues(): array
+    {
+        $sql = 'SELECT id, `name` FROM aiwriter_process ORDER BY create_time DESC';
+        return Be::getDb()->getKeyValues($sql);
     }
 
 }

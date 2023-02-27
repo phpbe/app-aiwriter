@@ -72,7 +72,8 @@ class Process extends Task
                             $title = $this->textCompletion($prompt);
                             break;
                     }
-
+                    $title = str_replace("\n", '', $title);
+                    $title = strip_tags($title);
 
                     $description = '';
                     switch ($processDetails['description']['type']) {
@@ -84,6 +85,7 @@ class Process extends Task
                             $description = $this->textCompletion($prompt);
                             break;
                     }
+                    $description = nl2br($description);
 
                     $summary = '';
                     switch ($processDetails['summary']['type']) {
@@ -91,7 +93,7 @@ class Process extends Task
                             $summary = $material->summary;
                             break;
                         case 'extract':
-                            if (mb_strlen($description) >= $processDetails['summary']['extract']) {
+                            if (mb_strlen($description) <= $processDetails['summary']['extract']) {
                                 $summary = $description;
                             } else {
                                 $summary = mb_substr($description, 0, $processDetails['summary']['extract']);
@@ -102,6 +104,8 @@ class Process extends Task
                             $summary = $this->textCompletion($prompt);
                             break;
                     }
+                    $summary = str_replace("\n", '', $summary);
+                    $summary = strip_tags($summary);
 
 
                     $obj = new \stdClass();
