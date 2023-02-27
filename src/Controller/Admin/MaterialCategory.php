@@ -2,21 +2,11 @@
 
 namespace Be\App\AiWriter\Controller\Admin;
 
-
-use Be\AdminPlugin\Detail\Item\DetailItemHtml;
-use Be\AdminPlugin\Detail\Item\DetailItemToggleIcon;
-use Be\AdminPlugin\Form\Item\FormItemAvatar;
 use Be\AdminPlugin\Form\Item\FormItemInputNumber;
-use Be\AdminPlugin\Form\Item\FormItemSelect;
-use Be\AdminPlugin\Form\Item\FormItemSwitch;
-use Be\AdminPlugin\Table\Item\TableItemImage;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
-use Be\App\ControllerException;
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
-use Be\Db\Tuple;
-use Be\Util\Crypt\Random;
 
 /**
  * @BeMenuGroup("素材")

@@ -3,7 +3,6 @@
 namespace Be\App\AiWriter\Controller\Admin;
 
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
-use Be\AdminPlugin\Form\Item\FormItemInput;
 use Be\AdminPlugin\Form\Item\FormItemInputTextArea;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Form\Item\FormItemTinymce;

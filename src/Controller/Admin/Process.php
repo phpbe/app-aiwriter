@@ -2,16 +2,11 @@
 
 namespace Be\App\AiWriter\Controller\Admin;
 
-use Be\AdminPlugin\Detail\Item\DetailItemHtml;
-use Be\AdminPlugin\Form\Item\FormItemInput;
-use Be\AdminPlugin\Form\Item\FormItemInputTextArea;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
-use Be\AdminPlugin\Form\Item\FormItemTinymce;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemProgress;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
-use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
-use Be\AdminPlugin\Toolbar\Item\ToolbarItemLink;
+use Be\AdminPlugin\Table\Item\TableItemSwitch;
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
 
@@ -30,6 +25,8 @@ class Process extends Auth
      */
     public function index()
     {
+
+
         Be::getAdminPlugin('Curd')->setting([
             'label' => '加工任务',
             'table' => 'aiwriter_process',
@@ -41,9 +38,23 @@ class Process extends Auth
                 'form' => [
                     'items' => [
                         [
-                            'name' => 'title',
+                            'name' => 'name',
                             'label' => '名称',
                         ],
+                        [
+                            'name' => 'is_enable',
+                            'label' => '是否启用',
+                            'driver' => FormItemSelect::class,
+                            'value' => Be::getRequest()->request('is_enable', 'all'),
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                            'counter' => true,
+                            'keyValues' => [
+                                'all' => '全部',
+                                '1' => '启用',
+                                '0' => '停用',
+                            ],
+                        ]
                     ],
                 ],
 
@@ -145,6 +156,17 @@ class Process extends Auth
                             },
                         ],
                         [
+                            'name' => 'is_enable',
+                            'label' => '是否启用',
+                            'driver' => TableItemSwitch::class,
+                            'target' => 'ajax',
+                            'task' => 'fieldEdit',
+                            'width' => '80',
+                            'exportValue' => function ($row) {
+                                return $row['is_enable'] ? '是' : '否';
+                            },
+                        ],
+                        [
                             'name' => 'create_time',
                             'label' => '创建时间',
                             'width' => '180',
@@ -205,9 +227,10 @@ class Process extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.AiWriter.Admin.Process')->edit($request->json('formData'));
+                $process = Be::getService('App.AiWriter.Admin.Process')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '新建加工任务成功！');
+                $response->set('process', $process);
                 $response->set('redirectUrl', beAdminUrl('AiWriter.Process.index'));
                 $response->json();
             } catch (\Throwable $t) {
@@ -217,6 +240,13 @@ class Process extends Auth
             }
         } else {
             $response->set('process', false);
+
+            $materialCategoryKeyValues = Be::getService('App.AiWriter.Admin.MaterialCategory')->getCategoryKeyValues();
+            $materialCategoryKeyValues = \Be\Util\Arr::merge([
+                'all' => '全部',
+                '' => '未分类',
+            ], $materialCategoryKeyValues);
+            $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
 
             $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
             $response->set('formActionUrl', beAdminUrl('AiWriter.Process.create'));
@@ -238,9 +268,10 @@ class Process extends Auth
         $response = Be::getResponse();
         if ($request->isAjax()) {
             try {
-                Be::getService('App.AiWriter.Admin.Process')->edit($request->json('formData'));
+                $process = Be::getService('App.AiWriter.Admin.Process')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '编辑加工任务成功！');
+                $response->set('process', $process);
                 $response->set('redirectUrl', beAdminUrl('AiWriter.Process.index'));
                 $response->json();
             } catch (\Throwable $t) {

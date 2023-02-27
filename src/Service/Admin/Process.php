@@ -47,6 +47,8 @@ class Process
             throw new ServiceException('素材加工参数缺失！');
         }
 
+
+        // ------------------------------------------------------------------------------------------------------------- 标题检测
         if (!isset($data['details']['title']) || !is_array($data['details']['title'])) {
             throw new ServiceException('素材加工 - 标题参数缺失！');
         }
@@ -72,7 +74,10 @@ class Process
             'type' => $data['details']['title']['type'],
             'ai' => $data['details']['title']['ai'],
         ];
+        // ============================================================================================================= 标题检测
 
+
+        // ------------------------------------------------------------------------------------------------------------- 摘要检测
         if (!isset($data['details']['summary']) || !is_array($data['details']['summary'])) {
             throw new ServiceException('素材加工 - 摘要参数缺失！');
         }
@@ -81,8 +86,16 @@ class Process
             throw new ServiceException('素材加工 - 摘要.类型参数缺失！');
         }
 
-        if (!in_array($data['details']['summary']['type'], ['material', 'ai'])) {
+        if (!in_array($data['details']['summary']['type'], ['material', 'extract', 'ai'])) {
             throw new ServiceException('素材加工 - 摘要.类型参数无效！');
+        }
+
+        if ($data['details']['summary']['type'] === 'extract') {
+            if (!isset($data['details']['summary']['extract']) || !is_numeric($data['details']['summary']['extract'])) {
+                throw new ServiceException('素材加工 - 摘要.提取长度参数缺失！');
+            }
+        } else {
+            $data['details']['summary']['extract'] = '';
         }
 
         if ($data['details']['summary']['type'] === 'ai') {
@@ -95,10 +108,13 @@ class Process
 
         $details['summary'] = [
             'type' => $data['details']['summary']['type'],
+            'extract' => $data['details']['summary']['extract'],
             'ai' => $data['details']['summary']['ai'],
         ];
+        // ============================================================================================================= 摘要检测
 
 
+        // ------------------------------------------------------------------------------------------------------------- 描述检测
         if (!isset($data['details']['description']) || !is_array($data['details']['description'])) {
             throw new ServiceException('素材加工 - 描述参数缺失！');
         }
@@ -123,6 +139,8 @@ class Process
             'type' => $data['details']['description']['type'],
             'ai' => $data['details']['description']['ai'],
         ];
+        // ============================================================================================================= 描述检测
+
 
         if (!isset($data['is_enable']) || !is_numeric($data['is_enable'])) {
             $data['is_enable'] = 0;
@@ -220,7 +238,53 @@ class Process
             throw new ServiceException('加工任务（# ' . $processId . '）不存在！');
         }
 
-        $tupleProcess->details = unserialize($tupleProcess->details);
+        $details = unserialize($tupleProcess->details);
+        if (!isset($details['title'])) {
+            $details['title'] = [
+                'type' => 'ai',
+                'ai' => "",
+            ];
+        }
+        if (!isset($details['title']['type'])) {
+            $details['title']['type'] = 'ai';
+        }
+        if (!isset($details['title']['ai'])) {
+            $details['title']['ai'] = '';
+        }
+
+        if (!isset($details['summary'])) {
+            $details['summary'] = [
+                'type' => 'extract',
+                'extract' => 120,
+                'ai' => "",
+            ];
+        }
+        if (!isset($details['summary']['type'])) {
+            $details['summary']['type'] = 'ai';
+        }
+        if (!isset($details['summary']['extract'])) {
+            $details['summary']['extract'] = 120;
+        }
+        if (!isset($details['summary']['ai'])) {
+            $details['summary']['ai'] = '';
+        }
+
+        if (!isset($details['description'])) {
+            $details['description'] = [
+                'type' => 'ai',
+                'ai' => "",
+            ];
+        }
+        if (!isset($details['description']['type'])) {
+            $details['description']['type'] = 'ai';
+        }
+        if (!isset($details['description']['ai'])) {
+            $details['summary']['ai'] = '';
+        }
+
+
+        $tupleProcess->details = $details;
+
         return $tupleProcess->toObject();
     }
 
