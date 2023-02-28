@@ -2,6 +2,7 @@
 
 namespace Be\App\AiWriter\Controller\Admin;
 
+use Be\AdminPlugin\AdminPluginException;
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
 use Be\AdminPlugin\Form\Item\FormItemInputTextArea;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
@@ -218,6 +219,15 @@ class Material extends Auth
                             'keyValues' => $categoryKeyValues,
                         ],
                         [
+                            'name' => 'unique_key',
+                            'label' => '唯一键',
+                            'description' => '用于去重',
+                            'ui' => [
+                                'maxlength' => 200,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
                             'name' => 'title',
                             'label' => '标题',
                             'ui' => [
@@ -256,6 +266,15 @@ class Material extends Auth
                             'label' => '分类',
                             'driver' => FormItemSelect::class,
                             'keyValues' => $categoryKeyValues,
+                        ],
+                        [
+                            'name' => 'unique_key',
+                            'label' => '唯一键',
+                            'description' => '用于去重',
+                            'ui' => [
+                                'maxlength' => 200,
+                                'show-word-limit' => true,
+                            ],
                         ],
                         [
                             'name' => 'title',
@@ -307,6 +326,10 @@ class Material extends Auth
                             }
                         ],
                         [
+                            'name' => 'unique_key',
+                            'label' => '唯一键',
+                        ],
+                        [
                             'name' => 'title',
                             'label' => '标题',
                         ],
@@ -342,6 +365,18 @@ class Material extends Auth
                             }
                         ],
                         [
+                            'name' => 'unique_key',
+                            'label' => '唯一键',
+                            'check' => function($row) {
+                                if ($row['unique_key'] !== '') {
+                                    $sql = 'SELECT COUNT(*) FROM aiwriter_material WHERE category_id=? AND unique_key=?';
+                                    if (Be::getDb()->getValue($sql, [$row['category_id'], $row['unique_key']]) > 0) {
+                                        throw new AdminPluginException('唯一键 ' . $row['unique_key'] . ' 已存在！');
+                                    }
+                                }
+                            }
+                        ],
+                        [
                             'name' => 'title',
                             'label' => '标题',
                         ],
@@ -373,6 +408,10 @@ class Material extends Auth
 
                             return $categoryKeyValues[$row['category_id']] ?? '';
                         }
+                    ],
+                    [
+                        'name' => 'unique_key',
+                        'label' => '唯一键',
                     ],
                     [
                         'name' => 'title',
