@@ -2,6 +2,7 @@
 CREATE TABLE `aiwriter_material` (
 `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID',
+`unique_key` varchar(200) NOT NULL COMMENT '唯一键',
 `title` varchar(120) NOT NULL DEFAULT '' COMMENT '标题',
 `summary` varchar(500) NOT NULL DEFAULT '' COMMENT '摘要',
 `description` mediumtext NOT NULL COMMENT '描述',
