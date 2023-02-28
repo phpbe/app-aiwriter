@@ -95,7 +95,7 @@
                 <div class="be-col-24 be-md-col-auto">
                     <div class="be-p-150 be-bc-fff" style="height: 100%;">
                         <div class="be-row">
-                            <div class="be-col">是否发布：</div>
+                            <div class="be-col">是否启用：</div>
                             <div class="be-col-auto">
                                 <el-switch v-model.number="formData.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
                             </div>

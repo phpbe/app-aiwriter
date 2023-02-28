@@ -140,79 +140,78 @@ class ProcessContent extends Auth
                         ]
                     ],
                 ],
+            ],
 
-                'edit' => [
-                    'title' => '编辑管理员',
-                    'form' => [
-                        'items' => [
-                            [
-                                'name' => 'title',
-                                'label' => '标题',
-                                'ui' => [
-                                    'maxlength' => 120,
-                                    'show-word-limit' => true,
-                                ],
-                                'required' => true,
+            'edit' => [
+                'title' => '编辑管理员',
+                'form' => [
+                    'items' => [
+                        [
+                            'name' => 'title',
+                            'label' => '标题',
+                            'ui' => [
+                                'maxlength' => 120,
+                                'show-word-limit' => true,
                             ],
-                            [
-                                'name' => 'summary',
-                                'driver' => FormItemInputTextArea::class,
-                                'label' => '摘要',
-                                'ui' => [
-                                    'maxlength' => 500,
-                                    'show-word-limit' => true,
-                                ],
+                            'required' => true,
+                        ],
+                        [
+                            'name' => 'summary',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '摘要',
+                            'ui' => [
+                                'maxlength' => 500,
+                                'show-word-limit' => true,
                             ],
-                            [
-                                'name' => 'description',
-                                'label' => '描述',
-                                'driver' => FormItemTinymce::class,
-                                'option' => [
-                                    'toolbar_sticky_offset' => 0
-                                ],
+                        ],
+                        [
+                            'name' => 'description',
+                            'label' => '描述',
+                            'driver' => FormItemTinymce::class,
+                            'option' => [
+                                'toolbar_sticky_offset' => 0
                             ],
-                        ]
-                    ],
+                        ],
+                    ]
                 ],
+            ],
 
-                'detail' => [
-                    'title' => '文章详情',
-                    'form' => [
-                        'items' => [
-                            [
-                                'name' => 'id',
-                                'label' => 'ID',
-                            ],
-                            [
-                                'name' => 'process_id',
-                                'label' => '加工任务',
-                                'keyValues' => $processKeyValues,
-                            ],
-                            [
-                                'name' => 'title',
-                                'label' => '标题',
-                            ],
-                            [
-                                'name' => 'summary',
-                                'label' => '摘要',
-                            ],
-                            [
-                                'name' => 'description',
-                                'label' => '描述',
-                                'driver' => DetailItemHtml::class,
-                            ],
-                            [
-                                'name' => 'create_time',
-                                'label' => '创建时间',
-                            ],
-                            [
-                                'name' => 'update_time',
-                                'label' => '更新时间',
-                            ],
-                        ]
-                    ],
+            'detail' => [
+                'title' => '文章详情',
+                'form' => [
+                    'items' => [
+                        [
+                            'name' => 'id',
+                            'label' => 'ID',
+                        ],
+                        [
+                            'name' => 'process_id',
+                            'label' => '加工任务',
+                            'keyValues' => $processKeyValues,
+                        ],
+                        [
+                            'name' => 'title',
+                            'label' => '标题',
+                        ],
+                        [
+                            'name' => 'summary',
+                            'label' => '摘要',
+                        ],
+                        [
+                            'name' => 'description',
+                            'label' => '描述',
+                            'driver' => DetailItemHtml::class,
+                        ],
+                        [
+                            'name' => 'create_time',
+                            'label' => '创建时间',
+                        ],
+                        [
+                            'name' => 'update_time',
+                            'label' => '更新时间',
+                        ],
+                    ]
                 ],
-
             ],
 
         ])->execute();
