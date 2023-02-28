@@ -12,7 +12,8 @@ CREATE TABLE `aiwriter_material` (
 
 ALTER TABLE `aiwriter_material`
 ADD PRIMARY KEY (`id`),
-ADD KEY `category_id` (`category_id`);
+ADD KEY `category_id` (`category_id`, `unique_key`);
+
 
 CREATE TABLE `aiwriter_material_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
