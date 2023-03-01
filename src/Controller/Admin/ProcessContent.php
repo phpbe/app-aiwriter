@@ -95,6 +95,7 @@ class ProcessContent extends Auth
                             'name' => 'process_id',
                             'label' => '加工任务',
                             'keyValues' => $processKeyValues,
+                            'width' => '240',
                         ],
                         [
                             'name' => 'create_time',

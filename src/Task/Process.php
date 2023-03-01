@@ -74,7 +74,7 @@ class Process extends Task
                     }
                     $title = str_replace("\n", '', $title);
                     $title = strip_tags($title);
-                    $title = ltrim($title, "，、。；？ \t\n\r\0\x0B");
+                    $title = ltrim($title, ",.;?，、。；？ \t\n\r\0\x0B");
                     $title = trim($title);
 
                     $description = '';
@@ -87,7 +87,7 @@ class Process extends Task
                             $description = $this->textCompletion($prompt);
                             break;
                     }
-                    $description = ltrim($description, "，、。；？ \t\n\r\0\x0B");
+                    $description = ltrim($description, ",.;?，、。；？ \t\n\r\0\x0B");
                     $description = trim($description);
                     $description = nl2br($description);
 
@@ -117,7 +117,7 @@ class Process extends Task
                     }
                     $summary = str_replace("\n", '', $summary);
                     $summary = strip_tags($summary);
-                    $summary = ltrim($summary, "，、。；？ \t\n\r\0\x0B");
+                    $summary = ltrim($summary, ",.;?，、。；？ \t\n\r\0\x0B");
                     $summary = trim($summary);
 
                     $obj = new \stdClass();
