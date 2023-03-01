@@ -145,9 +145,17 @@
                             <el-button type="primary" size="mini" @click="insertTag('title', '{素材描述}')">{素材描述}</el-button>
                         </div>
                         <div class="be-mt-100">
-                            内容模板：
+                            AI处理模板：
                             <el-select @change="insertTemplate('title')" v-model = "template.title">
-                                <el-option value="改写以下内容，让它更符合SEO，更吸引用户，长度不超过30个字：<br>{素材标题}">改写以下内容，让它更符合SEO，更吸引用户，长度不超过30个字：{素材标题}</el-option>
+                                <?php
+                                foreach ($this->titleTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
                             </el-select>
                         </div>
                     </div>
@@ -159,7 +167,7 @@
                     $formData['details'] = [];
                     $formData['details']['title'] = [
                         'type' => 'ai',
-                        'ai' => "改写以下内容，让它更符合SEO，更吸引用户，长度不超过30个字：\n{素材标题}",
+                        'ai' => "",
                     ];
                 }
                 ?>
@@ -220,9 +228,17 @@
                             <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
                         </div>
                         <div class="be-mt-100">
-                            内容模板：
+                            AI处理模板：
                             <el-select @change="insertTemplate('summary')" v-model = "template.summary">
-                                <el-option value="根据以下内容，生成一段摘要，300字以内：<br>{素材标题}">改写以下内容，让它更符合SEO，更吸引用户：{素材标题}</el-option>
+                                <?php
+                                foreach ($this->summaryTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
                             </el-select>
                         </div>
                     </div>
@@ -272,9 +288,17 @@
                             <el-button type="primary" size="mini" @click="insertTag('description', '{素材描述}')">{素材描述}</el-button>
                         </div>
                         <div class="be-mt-100">
-                            内容模板：
+                            AI处理模板：
                             <el-select @change="insertTemplate('description')" v-model = "template.description">
-                                <el-option value="根据以下内容，生成一篇文章，内容尽可能多：<br>{素材标题}">根据以下内容，生成一篇文章，内容尽可能多：{素材标题}</el-option>
+                                <?php
+                                foreach ($this->descriptionTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
                             </el-select>
                         </div>
                     </div>
@@ -283,7 +307,7 @@
                 if (!$this->process) {
                     $formData['details']['description'] = [
                         'type' => 'ai',
-                        'ai' => "根据以下内容，生成一篇文章，内容尽可能多：\n{素材标题}",
+                        'ai' => "",
                     ];
                 }
                 ?>

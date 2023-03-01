@@ -4,9 +4,9 @@ namespace Be\App\AiWriter\Controller\Admin;
 
 
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
+use Be\AdminPlugin\Form\Item\FormItemInputNumberInt;
 use Be\AdminPlugin\Form\Item\FormItemInputTextArea;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
-use Be\AdminPlugin\Form\Item\FormItemTinymce;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
 use Be\App\System\Controller\Admin\Auth;
@@ -18,43 +18,63 @@ use Be\Be;
  * @BeMenuGroup("加工")
  * @BePermissionGroup("加工")
  */
-class ProcessContent extends Auth
+class ProcessTemplate extends Auth
 {
 
     /**
-     * @BeMenu("加工结果", icon = "bi-journals", ordering="2.20")
-     * @BePermission("加工结果", ordering="2.20")
+     * @BeMenu("AI处理模板", icon = "bi-card-text", ordering="2.30")
+     * @BePermission("AI处理模板", ordering="2.30")
      */
     public function index()
     {
-        $processKeyValues = Be::getService('App.AiWriter.Admin.Process')->getProcessKeyValues();
-        $processId = Be::getRequest()->get('process_id', 'all');
+        $typeKeyValues = [
+            'title' => '标题',
+            'summary' => '摘要',
+            'description' => '描述',
+        ];
+
         Be::getAdminPlugin('Curd')->setting([
-            'label' => '加工结果',
-            'table' => 'aiwriter_process_content',
+            'label' => 'AI处理模板',
+            'table' => 'aiwriter_process_template',
             'grid' => [
-                'title' => '加工结果',
+                'title' => 'AI处理模板',
                 'orderBy' => 'create_time',
                 'orderByDir' => 'DESC',
 
                 'form' => [
                     'items' => [
                         [
-                            'name' => 'title',
-                            'label' => '标题',
+                            'name' => 'content',
+                            'label' => '内容',
                         ],
                         [
-                            'name' => 'process_id',
-                            'label' => '分类',
+                            'name' => 'type',
+                            'label' => '类型',
                             'driver' => FormItemSelect::class,
                             'keyValues' => \Be\Util\Arr::merge([
                                 'all' => '全部',
-                            ], $processKeyValues),
+                            ], $typeKeyValues),
                             'nullValue' => 'all',
                             'defaultValue' => 'all',
-                            'value' => $processId,
                         ],
                     ],
+                ],
+
+                'titleRightToolbar' => [
+                    'items' => [
+                        [
+                            'label' => '新建',
+                            'task' => 'create',
+                            'target' => 'drawer', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
+                            'drawer' => [
+                                'width' => '80%'
+                            ],
+                            'ui' => [
+                                'icon' => 'el-icon-plus',
+                                'type' => 'primary',
+                            ],
+                        ],
+                    ]
                 ],
 
                 'tableToolbar' => [
@@ -81,8 +101,14 @@ class ProcessContent extends Auth
                             'width' => '50',
                         ],
                         [
-                            'name' => 'title',
-                            'label' => '标题',
+                            'name' => 'type',
+                            'label' => '类型',
+                            'keyValues' => $typeKeyValues,
+                            'width' => '120',
+                        ],
+                        [
+                            'name' => 'content',
+                            'label' => '内容',
                             'driver' => TableItemLink::class,
                             'align' => 'left',
                             'task' => 'detail',
@@ -92,9 +118,10 @@ class ProcessContent extends Auth
                             ],
                         ],
                         [
-                            'name' => 'process_id',
-                            'label' => '加工任务',
-                            'keyValues' => $processKeyValues,
+                            'name' => 'ordering',
+                            'label' => '排序',
+                            'width' => '120',
+                            'sortable' => true,
                         ],
                         [
                             'name' => 'create_time',
@@ -145,35 +172,63 @@ class ProcessContent extends Auth
                 ],
             ],
 
-            'edit' => [
-                'title' => '编辑管理员',
+            'create' => [
+                'title' => '新建素材',
                 'form' => [
                     'items' => [
                         [
-                            'name' => 'title',
-                            'label' => '标题',
-                            'ui' => [
-                                'maxlength' => 120,
-                                'show-word-limit' => true,
-                            ],
+                            'name' => 'type',
+                            'label' => '类型',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => $typeKeyValues,
+                            'defaultValue' => 'title',
                             'required' => true,
                         ],
                         [
-                            'name' => 'summary',
+                            'name' => 'content',
                             'driver' => FormItemInputTextArea::class,
-                            'label' => '摘要',
+                            'label' => '内容',
+                            'required' => true,
                             'ui' => [
                                 'maxlength' => 500,
                                 'show-word-limit' => true,
                             ],
                         ],
                         [
-                            'name' => 'description',
-                            'label' => '描述',
-                            'driver' => FormItemTinymce::class,
-                            'option' => [
-                                'toolbar_sticky_offset' => 0
+                            'name' => 'ordering',
+                            'label' => '排序',
+                            'driver' => FormItemInputNumberInt::class,
+                            'defaultValue' => 100,
+                        ],
+                    ]
+                ],
+            ],
+
+            'edit' => [
+                'title' => '编辑管理员',
+                'form' => [
+                    'items' => [
+                        [
+                            'name' => 'type',
+                            'label' => '类型',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => $typeKeyValues,
+                            'required' => true,
+                        ],
+                        [
+                            'name' => 'content',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '内容',
+                            'required' => true,
+                            'ui' => [
+                                'maxlength' => 500,
+                                'show-word-limit' => true,
                             ],
+                        ],
+                        [
+                            'name' => 'ordering',
+                            'label' => '排序',
+                            'driver' => FormItemInputNumberInt::class,
                         ],
                     ]
                 ],
@@ -188,22 +243,18 @@ class ProcessContent extends Auth
                             'label' => 'ID',
                         ],
                         [
-                            'name' => 'process_id',
-                            'label' => '加工任务',
-                            'keyValues' => $processKeyValues,
+                            'name' => 'type',
+                            'label' => '类型',
+                            'keyValues' => $typeKeyValues,
                         ],
                         [
-                            'name' => 'title',
-                            'label' => '标题',
-                        ],
-                        [
-                            'name' => 'summary',
-                            'label' => '摘要',
-                        ],
-                        [
-                            'name' => 'description',
-                            'label' => '描述',
+                            'name' => 'content',
+                            'label' => '类型',
                             'driver' => DetailItemHtml::class,
+                        ],
+                        [
+                            'name' => 'ordering',
+                            'label' => '排序',
                         ],
                         [
                             'name' => 'create_time',

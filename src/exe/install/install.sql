@@ -63,6 +63,7 @@ CREATE TABLE `aiwriter_process_template` (
 `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `type` varchar(30) NOT NULL DEFAULT '' COMMENT '类型',
 `content` varchar(500) NOT NULL DEFAULT '' COMMENT '内容',
+`ordering` int(11) NOT NULL DEFAULT '100' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='加工';
@@ -70,3 +71,10 @@ CREATE TABLE `aiwriter_process_template` (
 ALTER TABLE `aiwriter_process_template`
 ADD PRIMARY KEY (`id`),
 ADD KEY `type` (`type`);
+
+INSERT INTO `aiwriter_process_template` (`id`, `type`, `content`, `create_time`, `create_time`, `update_time`) VALUES
+((SELECT UUID()), 'title', '改写以下内容，让它更符合SEO，更吸引用户，长度不超过30个字：\n{素材标题}', 100,  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'summary', '改写以下内容，让它更符合SEO，更吸引用户：\n{素材标题}', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'description', '根据以下内容，生成一篇文章，内容尽可能多：\n{素材标题}', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+

@@ -248,6 +248,14 @@ class Process extends Auth
             ], $materialCategoryKeyValues);
             $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
 
+            $serviceProcessTemplate = Be::getService('App.AiWriter.Admin.ProcessTemplate');
+            $titleTemplates = $serviceProcessTemplate->getTemplates('title');
+            $summaryTemplates = $serviceProcessTemplate->getTemplates('summary');
+            $descriptionTemplates = $serviceProcessTemplate->getTemplates('description');
+            $response->set('titleTemplates', $titleTemplates);
+            $response->set('summaryTemplates', $summaryTemplates);
+            $response->set('descriptionTemplates', $descriptionTemplates);
+
             $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
             $response->set('formActionUrl', beAdminUrl('AiWriter.Process.create'));
 
@@ -298,6 +306,14 @@ class Process extends Auth
                 '' => '未分类',
             ], $materialCategoryKeyValues);
             $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
+
+            $serviceProcessTemplate = Be::getService('App.AiWriter.Admin.ProcessTemplate');
+            $titleTemplates = $serviceProcessTemplate->getTemplates('title');
+            $summaryTemplates = $serviceProcessTemplate->getTemplates('summary');
+            $descriptionTemplates = $serviceProcessTemplate->getTemplates('description');
+            $response->set('titleTemplates', $titleTemplates);
+            $response->set('summaryTemplates', $summaryTemplates);
+            $response->set('descriptionTemplates', $descriptionTemplates);
 
             $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
             $response->set('formActionUrl', beAdminUrl('AiWriter.Process.edit'));
