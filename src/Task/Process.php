@@ -74,6 +74,8 @@ class Process extends Task
                     }
                     $title = str_replace("\n", '', $title);
                     $title = strip_tags($title);
+                    $title = ltrim($title, "，、。；？ \t\n\r\0\x0B");
+                    $title = trim($title);
 
                     $description = '';
                     switch ($processDetails['description']['type']) {
@@ -86,6 +88,8 @@ class Process extends Task
                             break;
                     }
                     $description = nl2br($description);
+                    $description = ltrim($description, "，、。；？ \t\n\r\0\x0B");
+                    $description = trim($description);
 
                     $summary = '';
                     switch ($processDetails['summary']['type']) {
@@ -113,7 +117,8 @@ class Process extends Task
                     }
                     $summary = str_replace("\n", '', $summary);
                     $summary = strip_tags($summary);
-
+                    $summary = ltrim($summary, "，、。；？ \t\n\r\0\x0B");
+                    $summary = trim($summary);
 
                     $obj = new \stdClass();
                     $obj->id = $db->uuid();
