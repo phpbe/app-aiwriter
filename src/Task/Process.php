@@ -97,6 +97,13 @@ class Process extends Task
                                 $summary = $description;
                             } else {
                                 $summary = mb_substr($description, 0, $processDetails['summary']['extract']);
+                                $pos = strrpos($summary, '<br />');
+                                if ($pos !== false) {
+                                    $summary2 = substr($summary, 0, $pos);
+                                    if (mb_strlen($summary2) >= $processDetails['summary']['extract'] / 2) {
+                                        $summary = $summary2;
+                                    }
+                                }
                             }
                             break;
                         case 'ai':
