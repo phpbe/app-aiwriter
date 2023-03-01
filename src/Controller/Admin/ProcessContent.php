@@ -121,7 +121,7 @@ class ProcessContent extends Auth
                                     'style' => 'font-size: 20px;',
                                 ],
                                 'icon' => 'el-icon-edit',
-                                'action' => 'edit',
+                                'task' => 'edit',
                                 'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             ],
                             [
@@ -134,7 +134,7 @@ class ProcessContent extends Auth
                                 ],
                                 'icon' => 'el-icon-delete',
                                 'confirm' => '确认要删除么？',
-                                'action' => 'delete',
+                                'task' => 'delete',
                                 'target' => 'ajax',
                             ],
                         ]
@@ -216,43 +216,6 @@ class ProcessContent extends Auth
 
         ])->execute();
     }
-
-    /**
-     * 删除
-     *
-     * @BePermission("删除", ordering="2.23")
-     */
-    public function delete()
-    {
-        $request = Be::getRequest();
-        $response = Be::getResponse();
-
-        try {
-            $postData = $request->json();
-
-            $processContentIds = [];
-            if (isset($postData['selectedRows'])) {
-                foreach ($postData['selectedRows'] as $row) {
-                    $processContentIds[] = $row['id'];
-                }
-            } elseif (isset($postData['row'])) {
-                $processContentIds[] = $postData['row']['id'];
-            }
-
-            if (count($processContentIds) > 0) {
-                Be::getService('App.AiWriter.Admin.ProcessContent')->delete($processContentIds);
-            }
-
-            $response->set('success', true);
-            $response->set('message', '删除成功！');
-            $response->json();
-        } catch (\Throwable $t) {
-            $response->set('success', false);
-            $response->set('message', $t->getMessage());
-            $response->json();
-        }
-    }
-
 
 
 }
