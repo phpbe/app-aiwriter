@@ -61,7 +61,7 @@ class ProcessContent extends Auth
                     'items' => [
                         [
                             'label' => '批量删除',
-                            'action' => 'delete',
+                            'task' => 'delete',
                             'target' => 'ajax',
                             'confirm' => '此操作将从数据库彻底删除，确认要执行么？',
                             'ui' => [
