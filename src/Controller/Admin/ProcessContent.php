@@ -122,7 +122,10 @@ class ProcessContent extends Auth
                                 ],
                                 'icon' => 'el-icon-edit',
                                 'task' => 'edit',
-                                'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
+                                'target' => 'drawer', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
+                                'drawer' => [
+                                    'width' => '80%'
+                                ],
                             ],
                             [
                                 'label' => '',
