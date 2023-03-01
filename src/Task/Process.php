@@ -87,9 +87,9 @@ class Process extends Task
                             $description = $this->textCompletion($prompt);
                             break;
                     }
-                    $description = nl2br($description);
                     $description = ltrim($description, "，、。；？ \t\n\r\0\x0B");
                     $description = trim($description);
+                    $description = nl2br($description);
 
                     $summary = '';
                     switch ($processDetails['summary']['type']) {
