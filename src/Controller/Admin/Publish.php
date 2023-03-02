@@ -11,25 +11,25 @@ use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
 
 /**
- * 加工
+ * 发布
  *
- * @BeMenuGroup("加工", icon = "bi-pencil-square", ordering="2")
- * @BePermissionGroup("加工")
+ * @BeMenuGroup("发布", icon = "bi-cloud-arrow-up", ordering="3")
+ * @BePermissionGroup("发布")
  */
-class Process extends Auth
+class Publish extends Auth
 {
 
     /**
-     * @BeMenu("加工任务", icon = "bi-list-check", ordering="2.10")
-     * @BePermission("加工任务", ordering="2.10")
+     * @BeMenu("发布任务", icon = "bi-list-check", ordering="3.10")
+     * @BePermission("发布任务", ordering="3.10")
      */
     public function index()
     {
         Be::getAdminPlugin('Curd')->setting([
-            'label' => '加工任务',
-            'table' => 'aiwriter_process',
+            'label' => '发布任务',
+            'table' => 'aiwriter_publish',
             'grid' => [
-                'title' => '加工任务',
+                'title' => '发布任务',
                 'orderBy' => 'create_time',
                 'orderByDir' => 'DESC',
 
@@ -59,7 +59,7 @@ class Process extends Auth
                 'titleRightToolbar' => [
                     'items' => [
                         [
-                            'label' => '新建加工任务',
+                            'label' => '新建发布任务',
                              'ui' => [
                                 'icon' => 'el-icon-plus',
                                 'type' => 'primary',
@@ -105,49 +105,43 @@ class Process extends Auth
                             ],
                         ],
                         [
-                            'name' => 'material_count',
-                            'label' => '素材数',
+                            'name' => 'process_content_count',
+                            'label' => '文章数',
                             'align' => 'center',
                             'width' => '90',
                             'driver' => TableItemLink::class,
                             'value' => function ($row) {
                                 $db = Be::getDb();
-                                if ($row['material_category_id'] === 'all') {
-                                    $sql = 'SELECT COUNT(*) FROM aiwriter_material';
-                                    $count = $db->getValue($sql);
-                                } else {
-                                    $sql = 'SELECT COUNT(*) FROM aiwriter_material WHERE category_id = ?';
-                                    $count = $db->getValue($sql, [$row['material_category_id']]);
-                                }
-
-                                return $count;
-                            },
-                            'action' => 'goMaterials',
-                            'target' => 'self',
-                        ],
-                        [
-                            'name' => 'process_count',
-                            'label' => '已加工',
-                            'align' => 'center',
-                            'width' => '90',
-                            'driver' => TableItemLink::class,
-                            'value' => function ($row) {
                                 $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE process_id = ?';
-                                $count = Be::getDb()->getValue($sql, [$row['id']]);
+                                $count = $db->getValue($sql, [$row['process_id']]);
                                 return $count;
                             },
                             'action' => 'goProcessContents',
                             'target' => 'self',
                         ],
                         [
-                            'name' => 'process_percent',
+                            'name' => 'publish_count',
+                            'label' => '已发布',
+                            'align' => 'center',
+                            'width' => '90',
+                            'driver' => TableItemLink::class,
+                            'value' => function ($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_publish_content WHERE publish_id = ?';
+                                $count = Be::getDb()->getValue($sql, [$row['id']]);
+                                return $count;
+                            },
+                            'action' => 'goPublishContents',
+                            'target' => 'self',
+                        ],
+                        [
+                            'name' => 'publish_percent',
                             'label' => '进度',
                             'align' => 'center',
                             'width' => '120',
                             'driver' => TableItemProgress::class,
                             'value' => function ($row) {
-                                if ($row['material_count'] > 0) {
-                                    return round($row['process_count'] * 100 / $row['material_count'], 1);
+                                if ($row['process_content_count'] > 0) {
+                                    return round($row['publish_count'] * 100 / $row['process_content_count'], 1);
                                 } else {
                                     return 100;
                                 }
@@ -214,9 +208,9 @@ class Process extends Auth
     }
     
     /**
-     * 新建加工任务
+     * 新建发布任务
      *
-     * @BePermission("新建", ordering="2.11")
+     * @BePermission("新建", ordering="3.11")
      */
     public function create()
     {
@@ -225,11 +219,11 @@ class Process extends Auth
 
         if ($request->isAjax()) {
             try {
-                $process = Be::getService('App.AiWriter.Admin.Process')->edit($request->json('formData'));
+                $publish = Be::getService('App.AiWriter.Admin.Publish')->edit($request->json('formData'));
                 $response->set('success', true);
-                $response->set('message', '新建加工任务成功！');
-                $response->set('process', $process);
-                $response->set('redirectUrl', beAdminUrl('AiWriter.Process.index'));
+                $response->set('message', '新建发布任务成功！');
+                $response->set('publish', $publish);
+                $response->set('redirectUrl', beAdminUrl('AiWriter.Publish.index'));
                 $response->json();
             } catch (\Throwable $t) {
                 $response->set('success', false);
@@ -237,36 +231,24 @@ class Process extends Auth
                 $response->json();
             }
         } else {
-            $response->set('process', false);
+            $response->set('publish', false);
 
-            $materialCategoryKeyValues = Be::getService('App.AiWriter.Admin.MaterialCategory')->getCategoryKeyValues();
-            $materialCategoryKeyValues = \Be\Util\Arr::merge([
-                'all' => '全部',
-                '' => '未分类',
-            ], $materialCategoryKeyValues);
-            $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
+            $processKeyValues = Be::getService('App.AiWriter.Admin.Process')->getProcessKeyValues();
+            $response->set('processKeyValues', $processKeyValues);
 
-            $serviceProcessTemplate = Be::getService('App.AiWriter.Admin.ProcessTemplate');
-            $titleTemplates = $serviceProcessTemplate->getTemplates('title');
-            $summaryTemplates = $serviceProcessTemplate->getTemplates('summary');
-            $descriptionTemplates = $serviceProcessTemplate->getTemplates('description');
-            $response->set('titleTemplates', $titleTemplates);
-            $response->set('summaryTemplates', $summaryTemplates);
-            $response->set('descriptionTemplates', $descriptionTemplates);
+            $response->set('backUrl', beAdminUrl('AiWriter.Publish.index'));
+            $response->set('formActionUrl', beAdminUrl('AiWriter.Publish.create'));
 
-            $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
-            $response->set('formActionUrl', beAdminUrl('AiWriter.Process.create'));
+            $response->set('title', '新建发布任务');
 
-            $response->set('title', '新建加工任务');
-
-            $response->display('App.AiWriter.Admin.Process.edit');
+            $response->display('App.AiWriter.Admin.Publish.edit');
         }
     }
 
     /**
      * 编辑
      *
-     * @BePermission("编辑", ordering="2.12")
+     * @BePermission("编辑", ordering="3.12")
      */
     public function edit()
     {
@@ -274,11 +256,11 @@ class Process extends Auth
         $response = Be::getResponse();
         if ($request->isAjax()) {
             try {
-                $process = Be::getService('App.AiWriter.Admin.Process')->edit($request->json('formData'));
+                $publish = Be::getService('App.AiWriter.Admin.Publish')->edit($request->json('formData'));
                 $response->set('success', true);
-                $response->set('message', '编辑加工任务成功！');
-                $response->set('process', $process);
-                $response->set('redirectUrl', beAdminUrl('AiWriter.Process.index'));
+                $response->set('message', '编辑发布任务成功！');
+                $response->set('publish', $publish);
+                $response->set('redirectUrl', beAdminUrl('AiWriter.Publish.index'));
                 $response->json();
             } catch (\Throwable $t) {
                 $response->set('success', false);
@@ -290,33 +272,21 @@ class Process extends Auth
             if ($postData) {
                 $postData = json_decode($postData, true);
                 if (isset($postData['row']['id']) && $postData['row']['id']) {
-                    $response->redirect(beAdminUrl('AiWriter.Process.edit', ['id' => $postData['row']['id']]));
+                    $response->redirect(beAdminUrl('AiWriter.Publish.edit', ['id' => $postData['row']['id']]));
                 }
             }
         } else {
-            $processId = $request->get('id', '');
-            $process = Be::getService('App.AiWriter.Admin.Process')->getProcess($processId);
-            $response->set('process', $process);
+            $publishId = $request->get('id', '');
+            $publish = Be::getService('App.AiWriter.Admin.Publish')->getPublish($publishId);
+            $response->set('publish', $publish);
 
-            $materialCategoryKeyValues = Be::getService('App.AiWriter.Admin.MaterialCategory')->getCategoryKeyValues();
-            $materialCategoryKeyValues = \Be\Util\Arr::merge([
-                'all' => '全部',
-                '' => '未分类',
-            ], $materialCategoryKeyValues);
-            $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
+            $processKeyValues = Be::getService('App.AiWriter.Admin.Process')->getProcessKeyValues();
+            $response->set('processKeyValues', $processKeyValues);
 
-            $serviceProcessTemplate = Be::getService('App.AiWriter.Admin.ProcessTemplate');
-            $titleTemplates = $serviceProcessTemplate->getTemplates('title');
-            $summaryTemplates = $serviceProcessTemplate->getTemplates('summary');
-            $descriptionTemplates = $serviceProcessTemplate->getTemplates('description');
-            $response->set('titleTemplates', $titleTemplates);
-            $response->set('summaryTemplates', $summaryTemplates);
-            $response->set('descriptionTemplates', $descriptionTemplates);
+            $response->set('backUrl', beAdminUrl('AiWriter.Publish.index'));
+            $response->set('formActionUrl', beAdminUrl('AiWriter.Publish.edit'));
 
-            $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
-            $response->set('formActionUrl', beAdminUrl('AiWriter.Process.edit'));
-
-            $response->set('title', '编辑加工任务');
+            $response->set('title', '编辑发布任务');
 
             $response->display();
         }
@@ -325,7 +295,7 @@ class Process extends Auth
     /**
      * 删除
      *
-     * @BePermission("删除", ordering="2.13")
+     * @BePermission("删除", ordering="3.13")
      */
     public function delete()
     {
@@ -335,17 +305,17 @@ class Process extends Auth
         try {
             $postData = $request->json();
 
-            $processIds = [];
+            $publishIds = [];
             if (isset($postData['selectedRows'])) {
                 foreach ($postData['selectedRows'] as $row) {
-                    $processIds[] = $row['id'];
+                    $publishIds[] = $row['id'];
                 }
             } elseif (isset($postData['row'])) {
-                $processIds[] = $postData['row']['id'];
+                $publishIds[] = $postData['row']['id'];
             }
 
-            if (count($processIds) > 0) {
-                Be::getService('App.AiWriter.Admin.Process')->delete($processIds);
+            if (count($publishIds) > 0) {
+                Be::getService('App.AiWriter.Admin.Publish')->delete($publishIds);
             }
 
             $response->set('success', true);

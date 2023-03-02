@@ -100,7 +100,7 @@
                                 <el-switch v-model.number="formData.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
                             </div>
                         </div>
-                        <?php $formData['is_enable'] = ($this->process ? $this->process->is_enable : 0); ?>
+                        <?php $formData['is_enable'] = ($this->process ? $this->process->is_enable : 1); ?>
                     </div>
                 </div>
             </div>

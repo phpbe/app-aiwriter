@@ -5,13 +5,13 @@ namespace Be\App\AiWriter\Service\Admin;
 use Be\App\ServiceException;
 use Be\Be;
 
-class Process
+class Publish
 {
 
     /**
-     * 编辑加工任务
+     * 编辑发布任务
      *
-     * @param array $data 加工任务数据
+     * @param array $data 发布任务数据
      * @return object
      * @throws \Throwable
      */
@@ -20,23 +20,23 @@ class Process
         $db = Be::getDb();
 
         $isNew = true;
-        $processId = null;
+        $publishId = null;
         if (isset($data['id']) && $data['id'] !== '') {
             $isNew = false;
-            $processId = $data['id'];
+            $publishId = $data['id'];
         }
 
-        $tupleProcess = Be::getTuple('aiwriter_process');
+        $tuplePublish = Be::getTuple('aiwriter_publish');
         if (!$isNew) {
             try {
-                $tupleProcess->load($processId);
+                $tuplePublish->load($publishId);
             } catch (\Throwable $t) {
-                throw new ServiceException('加工任务（# ' . $processId . '）不存在！');
+                throw new ServiceException('发布任务（# ' . $publishId . '）不存在！');
             }
         }
 
         if (!isset($data['name']) || !is_string($data['name'])) {
-            throw new ServiceException('加工任务名称未填写！');
+            throw new ServiceException('发布任务名称未填写！');
         }
 
         if (!isset($data['material_category_id']) || !is_string($data['material_category_id'])) {
@@ -44,26 +44,26 @@ class Process
         }
 
         if (!isset($data['details']) || !is_array($data['details'])) {
-            throw new ServiceException('素材加工参数缺失！');
+            throw new ServiceException('素材发布参数缺失！');
         }
 
 
         // ------------------------------------------------------------------------------------------------------------- 标题检测
         if (!isset($data['details']['title']) || !is_array($data['details']['title'])) {
-            throw new ServiceException('素材加工 - 标题参数缺失！');
+            throw new ServiceException('素材发布 - 标题参数缺失！');
         }
 
         if (!isset($data['details']['title']['type']) || !is_string($data['details']['title']['type'])) {
-            throw new ServiceException('素材加工 - 标题.类型参数缺失！');
+            throw new ServiceException('素材发布 - 标题.类型参数缺失！');
         }
 
         if (!in_array($data['details']['title']['type'], ['material', 'ai'])) {
-            throw new ServiceException('素材加工 - 标题.类型参数无效！');
+            throw new ServiceException('素材发布 - 标题.类型参数无效！');
         }
 
         if ($data['details']['title']['type'] === 'ai') {
             if (!isset($data['details']['title']['ai']) || !is_string($data['details']['title']['ai'])) {
-                throw new ServiceException('素材加工 - 标题.AI处理参数缺失！');
+                throw new ServiceException('素材发布 - 标题.AI处理参数缺失！');
             }
         } else {
             $data['details']['title']['ai'] = '';
@@ -79,20 +79,20 @@ class Process
 
         // ------------------------------------------------------------------------------------------------------------- 摘要检测
         if (!isset($data['details']['summary']) || !is_array($data['details']['summary'])) {
-            throw new ServiceException('素材加工 - 摘要参数缺失！');
+            throw new ServiceException('素材发布 - 摘要参数缺失！');
         }
 
         if (!isset($data['details']['summary']['type']) || !is_string($data['details']['summary']['type'])) {
-            throw new ServiceException('素材加工 - 摘要.类型参数缺失！');
+            throw new ServiceException('素材发布 - 摘要.类型参数缺失！');
         }
 
         if (!in_array($data['details']['summary']['type'], ['material', 'extract', 'ai'])) {
-            throw new ServiceException('素材加工 - 摘要.类型参数无效！');
+            throw new ServiceException('素材发布 - 摘要.类型参数无效！');
         }
 
         if ($data['details']['summary']['type'] === 'extract') {
             if (!isset($data['details']['summary']['extract']) || !is_numeric($data['details']['summary']['extract'])) {
-                throw new ServiceException('素材加工 - 摘要.提取长度参数缺失！');
+                throw new ServiceException('素材发布 - 摘要.提取长度参数缺失！');
             }
         } else {
             $data['details']['summary']['extract'] = '';
@@ -100,7 +100,7 @@ class Process
 
         if ($data['details']['summary']['type'] === 'ai') {
             if (!isset($data['details']['summary']['ai']) || !is_string($data['details']['summary']['ai'])) {
-                throw new ServiceException('素材加工 - 摘要.AI处理参数缺失！');
+                throw new ServiceException('素材发布 - 摘要.AI处理参数缺失！');
             }
         } else {
             $data['details']['summary']['ai'] = '';
@@ -116,20 +116,20 @@ class Process
 
         // ------------------------------------------------------------------------------------------------------------- 描述检测
         if (!isset($data['details']['description']) || !is_array($data['details']['description'])) {
-            throw new ServiceException('素材加工 - 描述参数缺失！');
+            throw new ServiceException('素材发布 - 描述参数缺失！');
         }
 
         if (!isset($data['details']['description']['type']) || !is_string($data['details']['description']['type'])) {
-            throw new ServiceException('素材加工 - 描述.类型参数缺失！');
+            throw new ServiceException('素材发布 - 描述.类型参数缺失！');
         }
 
         if (!in_array($data['details']['description']['type'], ['material', 'ai'])) {
-            throw new ServiceException('素材加工 - 描述.类型参数无效！');
+            throw new ServiceException('素材发布 - 描述.类型参数无效！');
         }
 
         if ($data['details']['description']['type'] === 'ai') {
             if (!isset($data['details']['description']['ai']) || !is_string($data['details']['description']['ai'])) {
-                throw new ServiceException('素材加工 - 摘要.AI处理参数缺失！');
+                throw new ServiceException('素材发布 - 摘要.AI处理参数缺失！');
             }
         } else {
             $data['details']['description']['ai'] = '';
@@ -154,16 +154,16 @@ class Process
         $db->startTransaction();
         try {
             $now = date('Y-m-d H:i:s');
-            $tupleProcess->name = $data['name'];
-            $tupleProcess->material_category_id = $data['material_category_id'];
-            $tupleProcess->details = serialize($details);
-            $tupleProcess->is_enable = $data['is_enable'];
-            $tupleProcess->update_time = $now;
+            $tuplePublish->name = $data['name'];
+            $tuplePublish->material_category_id = $data['material_category_id'];
+            $tuplePublish->details = serialize($details);
+            $tuplePublish->is_enable = $data['is_enable'];
+            $tuplePublish->update_time = $now;
             if ($isNew) {
-                $tupleProcess->create_time = $now;
-                $tupleProcess->insert();
+                $tuplePublish->create_time = $now;
+                $tuplePublish->insert();
             } else {
-                $tupleProcess->update();
+                $tuplePublish->update();
             }
 
             $db->commit();
@@ -171,44 +171,44 @@ class Process
         } catch (\Throwable $t) {
             $db->rollback();
             Be::getLog()->error($t);
-            throw new ServiceException(($isNew ? '新建' : '编辑') . '加工任务发生异常！');
+            throw new ServiceException(($isNew ? '新建' : '编辑') . '发布任务发生异常！');
         }
 
-        return $tupleProcess->toObject();
+        return $tuplePublish->toObject();
     }
 
     /**
-     * 删除加工任务
+     * 删除发布任务
      *
-     * @param array $processIds
+     * @param array $publishIds
      * @return void
      * @throws ServiceException
      * @throws \Be\Db\DbException
      * @throws \Be\Runtime\RuntimeException
      */
-    public function delete(array $processIds)
+    public function delete(array $publishIds)
     {
-        if (count($processIds) === 0) return;
+        if (count($publishIds) === 0) return;
 
         $db = Be::getDb();
 
-        foreach ($processIds as $processId) {
-            $tupleProcess = Be::getTuple('aiwriter_process');
+        foreach ($publishIds as $publishId) {
+            $tuplePublish = Be::getTuple('aiwriter_publish');
             try {
-                $tupleProcess->load($processId);
+                $tuplePublish->load($publishId);
             } catch (\Throwable $t) {
-                throw new ServiceException('加工任务（# ' . $processId . '）不存在！');
+                throw new ServiceException('发布任务（# ' . $publishId . '）不存在！');
             }
 
             $db->startTransaction();
             try {
 
-                // 删除加工任务生成的内容
-                Be::getTable('aiwriter_process_content')
-                    ->where('process_id', '=', $processId)
+                // 删除发布任务生成的内容
+                Be::getTable('aiwriter_publish_content')
+                    ->where('publish_id', '=', $publishId)
                     ->delete();
 
-                $tupleProcess->delete();
+                $tuplePublish->delete();
 
                 $db->commit();
 
@@ -216,27 +216,27 @@ class Process
                 $db->rollback();
                 Be::getLog()->error($t);
 
-                throw new ServiceException('删除加工任务发生异常！');
+                throw new ServiceException('删除发布任务发生异常！');
             }
         }
     }
 
     /**
-     * 获取加工任务
+     * 获取发布任务
      *
-     * @param $processId
+     * @param $publishId
      * @return object
      */
-    public function getProcess($processId): object
+    public function getPublish($publishId): object
     {
-        $tupleProcess = Be::getTuple('aiwriter_process');
+        $tuplePublish = Be::getTuple('aiwriter_publish');
         try {
-            $tupleProcess->load($processId);
+            $tuplePublish->load($publishId);
         } catch (\Throwable $t) {
-            throw new ServiceException('加工任务（# ' . $processId . '）不存在！');
+            throw new ServiceException('发布任务（# ' . $publishId . '）不存在！');
         }
 
-        $details = unserialize($tupleProcess->details);
+        $details = unserialize($tuplePublish->details);
         if (!isset($details['title'])) {
             $details['title'] = [
                 'type' => 'ai',
@@ -280,19 +280,19 @@ class Process
             $details['summary']['ai'] = '';
         }
 
-        $tupleProcess->details = $details;
+        $tuplePublish->details = $details;
 
-        return $tupleProcess->toObject();
+        return $tuplePublish->toObject();
     }
 
     /**
-     * 获取加工任务键值对
+     * 获取发布任务键值对
      *
      * @return array
      */
-    public function getProcessKeyValues(): array
+    public function getPublishKeyValues(): array
     {
-        $sql = 'SELECT id, `name` FROM aiwriter_process ORDER BY create_time DESC';
+        $sql = 'SELECT id, `name` FROM aiwriter_publish ORDER BY create_time DESC';
         return Be::getDb()->getKeyValues($sql);
     }
 

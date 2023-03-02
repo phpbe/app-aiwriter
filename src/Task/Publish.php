@@ -7,11 +7,11 @@ use Be\Task\Task;
 use Be\Task\TaskException;
 
 /**
- * 加工
+ * 发布
  *
- * @BeTask("加工")
+ * @BeTask("发布")
  */
-class Process extends Task
+class Publish extends Task
 {
     /**
      * 执行超时时间
@@ -24,52 +24,52 @@ class Process extends Task
     public function execute()
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM aiwriter_process WHERE is_enable = 1';
-        $processes = $db->getObjects($sql);
-        foreach ($processes as $process) {
-            if ($process->material_category_id === 'all') {
+        $sql = 'SELECT * FROM aiwriter_publish WHERE is_enable = 1';
+        $publishes = $db->getObjects($sql);
+        foreach ($publishes as $publish) {
+            if ($publish->material_category_id === 'all') {
                 $sql = 'SELECT COUNT(*) FROM aiwriter_material';
                 $materialCount = $db->getValue($sql);
             } else {
                 $sql = 'SELECT COUNT(*) FROM aiwriter_material WHERE category_id = ?';
-                $materialCount = $db->getValue($sql, [$process->material_category_id]);
+                $materialCount = $db->getValue($sql, [$publish->material_category_id]);
             }
 
             if ($materialCount === 0) {
                 break;
             }
 
-            $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE process_id = ?';
-            $processContentCount = Be::getDb()->getValue($sql, [$process->id]);
+            $sql = 'SELECT COUNT(*) FROM aiwriter_publish_content WHERE publish_id = ?';
+            $publishContentCount = Be::getDb()->getValue($sql, [$publish->id]);
 
-            if ($processContentCount >= $materialCount) {
+            if ($publishContentCount >= $materialCount) {
                 break;
             }
 
-            if ($process->material_category_id === 'all') {
-                $sql = 'SELECT m.* FROM aiwriter_material m LEFT JOIN aiwriter_process_content pc ON m.id=pc.material_id AND pc.process_id=? WHERE pc.id is NULL';
-                $materials = $db->getObjects($sql, [$process->id]);
+            if ($publish->material_category_id === 'all') {
+                $sql = 'SELECT m.* FROM aiwriter_material m LEFT JOIN aiwriter_publish_content pc ON m.id=pc.material_id AND pc.publish_id=? WHERE pc.id is NULL';
+                $materials = $db->getObjects($sql, [$publish->id]);
             } else {
-                $sql = 'SELECT m.* FROM aiwriter_material m LEFT JOIN aiwriter_process_content pc ON m.id=pc.material_id AND pc.process_id=? WHERE m.category_id = ? AND pc.id is NULL';
-                $materials = $db->getObjects($sql, [$process->id, $process->material_category_id]);
+                $sql = 'SELECT m.* FROM aiwriter_material m LEFT JOIN aiwriter_publish_content pc ON m.id=pc.material_id AND pc.publish_id=? WHERE m.category_id = ? AND pc.id is NULL';
+                $materials = $db->getObjects($sql, [$publish->id, $publish->material_category_id]);
             }
 
             if (count($materials) === 0) {
                 break;
             }
 
-            $processDetails = unserialize($process->details);
+            $publishDetails = unserialize($publish->details);
             foreach ($materials as $material) {
 
                 try {
                     $title = '';
-                    switch ($processDetails['title']['type']) {
+                    switch ($publishDetails['title']['type']) {
                         case 'material':
                             $title = $material->title;
                             break;
                         case 'ai':
-                            $prompt = $this->formatAiPrompt($processDetails['title']['ai'], $material);
-                            $title = $this->chatCompletion($prompt);
+                            $prompt = $this->formatAiPrompt($publishDetails['title']['ai'], $material);
+                            $title = $this->textCompletion($prompt);
                             break;
                     }
                     $title = str_replace("\n", '', $title);
@@ -78,13 +78,13 @@ class Process extends Task
                     $title = trim($title);
 
                     $description = '';
-                    switch ($processDetails['description']['type']) {
+                    switch ($publishDetails['description']['type']) {
                         case 'material':
                             $description = $material->description;
                             break;
                         case 'ai':
-                            $prompt = $this->formatAiPrompt($processDetails['description']['ai'], $material);
-                            $description = $this->chatCompletion($prompt);
+                            $prompt = $this->formatAiPrompt($publishDetails['description']['ai'], $material);
+                            $description = $this->textCompletion($prompt);
                             break;
                     }
                     $description = ltrim($description, ",.;?，、。；？ \t\n\r\0\x0B");
@@ -92,27 +92,27 @@ class Process extends Task
                     $description = nl2br($description);
 
                     $summary = '';
-                    switch ($processDetails['summary']['type']) {
+                    switch ($publishDetails['summary']['type']) {
                         case 'material':
                             $summary = $material->summary;
                             break;
                         case 'extract':
-                            if (mb_strlen($description) <= $processDetails['summary']['extract']) {
+                            if (mb_strlen($description) <= $publishDetails['summary']['extract']) {
                                 $summary = $description;
                             } else {
-                                $summary = mb_substr($description, 0, $processDetails['summary']['extract']);
+                                $summary = mb_substr($description, 0, $publishDetails['summary']['extract']);
                                 $pos = strrpos($summary, '<br />');
                                 if ($pos !== false) {
                                     $summary2 = substr($summary, 0, $pos);
-                                    if (mb_strlen($summary2) >= $processDetails['summary']['extract'] / 2) {
+                                    if (mb_strlen($summary2) >= $publishDetails['summary']['extract'] / 2) {
                                         $summary = $summary2;
                                     }
                                 }
                             }
                             break;
                         case 'ai':
-                            $prompt = $this->formatAiPrompt($processDetails['summary']['ai'], $material);
-                            $summary = $this->chatCompletion($prompt);
+                            $prompt = $this->formatAiPrompt($publishDetails['summary']['ai'], $material);
+                            $summary = $this->textCompletion($prompt);
                             break;
                     }
                     $summary = str_replace("\n", '', $summary);
@@ -122,14 +122,14 @@ class Process extends Task
 
                     $obj = new \stdClass();
                     $obj->id = $db->uuid();
-                    $obj->process_id = $process->id;
+                    $obj->publish_id = $publish->id;
                     $obj->material_id = $material->id;
                     $obj->title = $title;
                     $obj->summary = $summary;
                     $obj->description = $description;
                     $obj->create_time = date('Y-m-d H:i:s');
                     $obj->update_time = date('Y-m-d H:i:s');
-                    $db->insert('aiwriter_process_content', $obj);
+                    $db->insert('aiwriter_publish_content', $obj);
 
                 } catch (\Throwable $t) {
                     Be::getLog()->warning($t);
@@ -163,7 +163,7 @@ class Process extends Task
      * @return string
      * @throws TaskException
      */
-    private function chatCompletion(string $prompt): string
+    private function textCompletion(string $prompt): string
     {
         $serviceApi = Be::getService('App.Openai.Api');
 
@@ -174,14 +174,7 @@ class Process extends Task
 
             $hasError = false;
             try {
-                $messages = [
-                    [
-                        'role' => 'user',
-                        'content' => $prompt,
-                    ],
-                ];
-
-                $answer = $serviceApi->chatCompletion($messages);
+                $answer = $serviceApi->textCompletion($prompt);
             } catch (\Throwable $t) {
                 $hasError = true;
 
@@ -193,9 +186,9 @@ class Process extends Task
             }
 
             if (Be::getRuntime()->isSwooleMode()) {
-                \Swoole\Coroutine::sleep(3);
+                \Swoole\Coroutine::sleep(1);
             } else {
-                sleep(3);
+                sleep(1);
             }
 
             $times++;

@@ -13,27 +13,27 @@ use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
 
 /**
- * 加工结果
+ * 发布记录
  *
- * @BeMenuGroup("加工")
- * @BePermissionGroup("加工")
+ * @BeMenuGroup("发布")
+ * @BePermissionGroup("发布")
  */
-class ProcessContent extends Auth
+class PublishContent extends Auth
 {
 
     /**
-     * @BeMenu("加工结果", icon = "bi-journals", ordering="2.20")
-     * @BePermission("加工结果", ordering="2.20")
+     * @BeMenu("发布记录", icon = "bi-journals", ordering="3.20")
+     * @BePermission("发布记录", ordering="3.20")
      */
     public function index()
     {
-        $processKeyValues = Be::getService('App.AiWriter.Admin.Process')->getProcessKeyValues();
-        $processId = Be::getRequest()->get('process_id', 'all');
+        $publishKeyValues = Be::getService('App.AiWriter.Admin.Publish')->getPublishKeyValues();
+        $publishId = Be::getRequest()->get('publish_id', 'all');
         Be::getAdminPlugin('Curd')->setting([
-            'label' => '加工结果',
-            'table' => 'aiwriter_process_content',
+            'label' => '发布记录',
+            'table' => 'aiwriter_publish_content',
             'grid' => [
-                'title' => '加工结果',
+                'title' => '发布记录',
                 'orderBy' => 'create_time',
                 'orderByDir' => 'DESC',
 
@@ -44,15 +44,15 @@ class ProcessContent extends Auth
                             'label' => '标题',
                         ],
                         [
-                            'name' => 'process_id',
-                            'label' => '加工任务',
+                            'name' => 'publish_id',
+                            'label' => '发布任务',
                             'driver' => FormItemSelect::class,
                             'keyValues' => \Be\Util\Arr::merge([
                                 'all' => '全部',
-                            ], $processKeyValues),
+                            ], $publishKeyValues),
                             'nullValue' => 'all',
                             'defaultValue' => 'all',
-                            'value' => $processId,
+                            'value' => $publishId,
                         ],
                     ],
                 ],
@@ -92,9 +92,9 @@ class ProcessContent extends Auth
                             ],
                         ],
                         [
-                            'name' => 'process_id',
-                            'label' => '加工任务',
-                            'keyValues' => $processKeyValues,
+                            'name' => 'publish_id',
+                            'label' => '发布任务',
+                            'keyValues' => $publishKeyValues,
                             'width' => '240',
                         ],
                         [
@@ -189,9 +189,9 @@ class ProcessContent extends Auth
                             'label' => 'ID',
                         ],
                         [
-                            'name' => 'process_id',
-                            'label' => '加工任务',
-                            'keyValues' => $processKeyValues,
+                            'name' => 'publish_id',
+                            'label' => '发布任务',
+                            'keyValues' => $publishKeyValues,
                         ],
                         [
                             'name' => 'title',
