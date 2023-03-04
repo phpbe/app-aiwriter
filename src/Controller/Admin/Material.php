@@ -363,17 +363,6 @@ class Material extends Auth
                         ],
                     ]
                 ],
-                'events' => [
-                    'before' => function($tuple, $postData) {
-                        $formData = $postData['formData'];
-                        if ($formData['unique_key'] !== '') {
-                            $sql = 'SELECT COUNT(*) FROM aiwriter_material WHERE id<>? AND category_id=? AND unique_key=?';
-                            if (Be::getDb()->getValue($sql, [$formData['id'], $formData['category_id'], $formData['unique_key']]) > 0) {
-                                throw new AdminPluginException('唯一键 ' . $formData['unique_key'] . ' 已存在！');
-                            }
-                        }
-                    }
-                ],
             ],
 
             'import' => [
@@ -411,7 +400,18 @@ class Material extends Auth
                             'label' => '描述',
                         ],
                     ],
-                ]
+                ],
+                'events' => [
+                    'before' => function($tuple, $postData) {
+                        $formData = $postData['formData'];
+                        if ($formData['unique_key'] !== '') {
+                            $sql = 'SELECT COUNT(*) FROM aiwriter_material WHERE id<>? AND category_id=? AND unique_key=?';
+                            if (Be::getDb()->getValue($sql, [$formData['id'], $formData['category_id'], $formData['unique_key']]) > 0) {
+                                throw new AdminPluginException('唯一键 ' . $formData['unique_key'] . ' 已存在！');
+                            }
+                        }
+                    }
+                ],
             ],
 
             'export' => [

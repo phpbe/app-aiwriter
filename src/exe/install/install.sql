@@ -90,6 +90,7 @@ CREATE TABLE `aiwriter_publish` (
 `post_data_type` varchar(30) NOT NULL DEFAULT 'mapping' COMMENT  '数据处理方法（mapping/code）',
 `post_data_mapping` text NOT NULL COMMENT  '数据处理-映射',
 `post_data_code` text NOT NULL COMMENT  '数据处理-代码',
+`success_mark` varchar(60) NOT NULL DEFAULT 'mapping' COMMENT  '成功标识',
 `interval` int(11) NOT NULL DEFAULT '1000' COMMENT '间隔时间（毫秒）',
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否有效',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -105,7 +106,8 @@ CREATE TABLE `aiwriter_publish_content` (
 `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `publish_id` varchar(36) NOT NULL DEFAULT '' COMMENT '发布任务ID',
 `process_content_id` varchar(36) NOT NULL DEFAULT '' COMMENT '加工结果ID',
-`publish_url` varchar(300) NOT NULL DEFAULT '' COMMENT '发布到的网址',
+`is_success` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否成功',
+`response` text NOT NULL COMMENT  '响应',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='加工';

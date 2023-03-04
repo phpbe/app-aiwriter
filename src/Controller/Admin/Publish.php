@@ -2,6 +2,9 @@
 
 namespace Be\App\AiWriter\Controller\Admin;
 
+use Be\AdminPlugin\Detail\Item\DetailItemHtml;
+use Be\AdminPlugin\Detail\Item\DetailItemProgress;
+use Be\AdminPlugin\Detail\Item\DetailItemSwitch;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemProgress;
@@ -25,6 +28,7 @@ class Publish extends Auth
      */
     public function index()
     {
+        $processKeyValues = Be::getService('App.AiWriter.Admin.Process')->getProcessKeyValues();
         Be::getAdminPlugin('Curd')->setting([
             'label' => '发布任务',
             'table' => 'aiwriter_publish',
@@ -204,6 +208,150 @@ class Publish extends Auth
                 ],
             ],
 
+            'detail' => [
+                'title' => '文章详情',
+                'form' => [
+                    'items' => [
+                        [
+                            'name' => 'id',
+                            'label' => 'ID',
+                        ],
+                        [
+                            'name' => 'name',
+                            'label' => '名称',
+                        ],
+                        [
+                            'name' => 'process_id',
+                            'label' => '加工任务',
+                            'keyValues' => $processKeyValues,
+                        ],
+                        [
+                            'name' => 'process_content_count',
+                            'label' => '文章数',
+                            'value' => function ($row) {
+                                $db = Be::getDb();
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE process_id = ?';
+                                $count = $db->getValue($sql, [$row['process_id']]);
+                                return $count;
+                            },
+                        ],
+                        [
+                            'name' => 'publish_count',
+                            'label' => '已发布',
+                            'value' => function ($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_publish_content WHERE publish_id = ?';
+                                $count = Be::getDb()->getValue($sql, [$row['id']]);
+                                return $count;
+                            },
+                        ],
+                        [
+                            'name' => 'post_url',
+                            'label' => '发布网址',
+                        ],
+                        [
+                            'name' => 'post_headers',
+                            'label' => '请求头',
+                            'driver' => DetailItemHtml::class,
+                            'value' => function ($row) {
+                                $post_headers = unserialize($row['post_headers']);
+
+                                $html = '';
+                                $i = 0;
+                                foreach ($post_headers as $post_header) {
+                                    if ($i === 0) {
+                                        $html .= '<div class="be-row">';
+                                    } else {
+                                        $html .= '<div class="be-row be-mt-100 be-bt-ccc">';
+                                    }
+
+                                    $html .= '<div class="be-col">' . $post_header['name'] . '</div>';
+                                    $html .= '<div class="be-col">' . $post_header['value'] . '</div>';
+                                    $i++;
+                                }
+
+                                return $html;
+                            },
+                        ],
+                        [
+                            'name' => 'post_format',
+                            'label' => '请求格式',
+                            'keyValues' => [
+                                'form' => 'FORM 表单',
+                                'json' => 'JSON 数据',
+                            ],
+                        ],
+                        [
+                            'name' => 'post_data_type',
+                            'label' => '数据处理方法',
+                            'keyValues' => [
+                                'mapping' => '映射',
+                                'code' => '代码处理',
+                            ],
+                        ],
+                        [
+                            'name' => 'post_data',
+                            'label' => '请求数据',
+                            'driver' => DetailItemHtml::class,
+                            'value' => function ($row) {
+                                $html = '';
+                                if ($row['post_data_type'] === 'mapping') {
+                                    $post_data_mapping = unserialize($row['post_data_mapping']);
+                                    $i = 0;
+                                    foreach ($post_data_mapping as $mapping) {
+                                        if ($i === 0) {
+                                            $html .= '<div class="be-row">';
+                                        } else {
+                                            $html .= '<div class="be-row be-bt-ccc">';
+                                        }
+
+                                        $html .= '<div class="be-col">' . $mapping['name'] . '</div>';
+                                        switch ($mapping['value_type']) {
+                                            case 'field':
+                                                $html .= '<div class="be-col">取用：</div>';
+                                                $html .= '<div class="be-col">' . $mapping['field'] . '</div>';
+                                                break;
+                                            case 'custom':
+                                                $html .= '<div class="be-col">自定义：</div>';
+                                                $html .= '<div class="be-col">' . $mapping['custom'] . '</div>';
+                                                break;
+                                        }
+                                        $html .= '</div>';
+                                        $i++;
+                                    }
+                                } elseif ($row['post_data_type'] === 'code') {
+                                    $html .= '<pre>';
+                                    $html .= $row['post_data_code'];
+                                    $html .= '</pre>';
+                                }
+
+                                return $html;
+                            },
+                        ],
+                        [
+                            'name' => 'success_mark',
+                            'label' => '成功标识',
+                        ],
+                        [
+                            'name' => 'interval',
+                            'label' => '间隔时间（毫秒）',
+                        ],
+                        [
+                            'name' => 'is_enable',
+                            'driver' => DetailItemSwitch::class,
+                            'label' => '是否启用',
+                        ],
+                        [
+                            'name' => 'create_time',
+                            'label' => '创建时间',
+                        ],
+                        [
+                            'name' => 'update_time',
+                            'label' => '更新时间',
+                        ],
+                    ]
+                ],
+            ],
+
         ])->execute();
     }
     
@@ -328,6 +476,45 @@ class Publish extends Auth
         }
     }
 
+
+
+    /**
+     * 指定加工任务下的加工结果
+     *
+     * @BePermission("*")
+     */
+    public function goProcessContents()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        $postData = $request->post('data', '', '');
+        if ($postData) {
+            $postData = json_decode($postData, true);
+            if (isset($postData['row']['id']) && $postData['row']['id']) {
+                $response->redirect(beAdminUrl('AiWriter.ProcessContent.index', ['process_id' => $postData['row']['process_id']]));
+            }
+        }
+    }
+
+    /**
+     * 指定发布任务下的发布结果
+     *
+     * @BePermission("*")
+     */
+    public function goPublishContents()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        $postData = $request->post('data', '', '');
+        if ($postData) {
+            $postData = json_decode($postData, true);
+            if (isset($postData['row']['id']) && $postData['row']['id']) {
+                $response->redirect(beAdminUrl('AiWriter.PublishContent.index', ['publish_id' => $postData['row']['id']]));
+            }
+        }
+    }
 
 
 }

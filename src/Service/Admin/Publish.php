@@ -36,111 +36,161 @@ class Publish
         }
 
         if (!isset($data['name']) || !is_string($data['name'])) {
+            throw new ServiceException('发布任务名称参数无效！');
+        }
+        $data['name'] = trim($data['name']);
+        if ($data['name'] === '') {
             throw new ServiceException('发布任务名称未填写！');
         }
 
-        if (!isset($data['material_category_id']) || !is_string($data['material_category_id'])) {
-            throw new ServiceException('素材分类未填写！');
+        if (!isset($data['process_id']) || !is_string($data['process_id'])) {
+            throw new ServiceException('加工任务参数无效！');
+        }
+        $data['process_id'] = trim($data['process_id']);
+        if ($data['process_id'] === '') {
+            throw new ServiceException('加工任务未填写！');
         }
 
-        if (!isset($data['details']) || !is_array($data['details'])) {
-            throw new ServiceException('素材发布参数缺失！');
+        if (!isset($data['post_url']) || !is_string($data['post_url'])) {
+            throw new ServiceException('发布网址参数无效！');
+        }
+        $data['post_url'] = trim($data['post_url']);
+        if ($data['post_url'] === '') {
+            throw new ServiceException('发布网址未填写！');
         }
 
-
-        // ------------------------------------------------------------------------------------------------------------- 标题检测
-        if (!isset($data['details']['title']) || !is_array($data['details']['title'])) {
-            throw new ServiceException('素材发布 - 标题参数缺失！');
+        // ------------------------------------------------------------------------------------------------------------- 请求头
+        if (!isset($data['post_headers']) || !is_array($data['post_headers'])) {
+            throw new ServiceException('请求头参数无效！');
         }
 
-        if (!isset($data['details']['title']['type']) || !is_string($data['details']['title']['type'])) {
-            throw new ServiceException('素材发布 - 标题.类型参数缺失！');
-        }
+        $i = 1;
+        foreach ($data['post_headers'] as &$header) {
 
-        if (!in_array($data['details']['title']['type'], ['material', 'ai'])) {
-            throw new ServiceException('素材发布 - 标题.类型参数无效！');
-        }
-
-        if ($data['details']['title']['type'] === 'ai') {
-            if (!isset($data['details']['title']['ai']) || !is_string($data['details']['title']['ai'])) {
-                throw new ServiceException('素材发布 - 标题.AI处理参数缺失！');
+            if (!isset($header['name']) || !is_string($header['name'])) {
+                throw new ServiceException('第' . $i . '项请求头的名称参数无效！');
             }
-        } else {
-            $data['details']['title']['ai'] = '';
-        }
 
-        $details = [];
-        $details['title'] = [
-            'type' => $data['details']['title']['type'],
-            'ai' => $data['details']['title']['ai'],
-        ];
-        // ============================================================================================================= 标题检测
-
-
-        // ------------------------------------------------------------------------------------------------------------- 摘要检测
-        if (!isset($data['details']['summary']) || !is_array($data['details']['summary'])) {
-            throw new ServiceException('素材发布 - 摘要参数缺失！');
-        }
-
-        if (!isset($data['details']['summary']['type']) || !is_string($data['details']['summary']['type'])) {
-            throw new ServiceException('素材发布 - 摘要.类型参数缺失！');
-        }
-
-        if (!in_array($data['details']['summary']['type'], ['material', 'extract', 'ai'])) {
-            throw new ServiceException('素材发布 - 摘要.类型参数无效！');
-        }
-
-        if ($data['details']['summary']['type'] === 'extract') {
-            if (!isset($data['details']['summary']['extract']) || !is_numeric($data['details']['summary']['extract'])) {
-                throw new ServiceException('素材发布 - 摘要.提取长度参数缺失！');
+            $header['name'] = trim($header['name']);
+            if ($header['name'] === '') {
+                throw new ServiceException('第' . $i . '项请求头的名称不能为空！');
             }
-        } else {
-            $data['details']['summary']['extract'] = '';
-        }
 
-        if ($data['details']['summary']['type'] === 'ai') {
-            if (!isset($data['details']['summary']['ai']) || !is_string($data['details']['summary']['ai'])) {
-                throw new ServiceException('素材发布 - 摘要.AI处理参数缺失！');
+            if (!isset($header['value']) || !is_string($header['value'])) {
+                throw new ServiceException('第' . $i . '项请求头的值参数无效！');
             }
-        } else {
-            $data['details']['summary']['ai'] = '';
-        }
 
-        $details['summary'] = [
-            'type' => $data['details']['summary']['type'],
-            'extract' => $data['details']['summary']['extract'],
-            'ai' => $data['details']['summary']['ai'],
-        ];
-        // ============================================================================================================= 摘要检测
-
-
-        // ------------------------------------------------------------------------------------------------------------- 描述检测
-        if (!isset($data['details']['description']) || !is_array($data['details']['description'])) {
-            throw new ServiceException('素材发布 - 描述参数缺失！');
-        }
-
-        if (!isset($data['details']['description']['type']) || !is_string($data['details']['description']['type'])) {
-            throw new ServiceException('素材发布 - 描述.类型参数缺失！');
-        }
-
-        if (!in_array($data['details']['description']['type'], ['material', 'ai'])) {
-            throw new ServiceException('素材发布 - 描述.类型参数无效！');
-        }
-
-        if ($data['details']['description']['type'] === 'ai') {
-            if (!isset($data['details']['description']['ai']) || !is_string($data['details']['description']['ai'])) {
-                throw new ServiceException('素材发布 - 摘要.AI处理参数缺失！');
+            $header['value'] = trim($header['value']);
+            if ($header['value'] === '') {
+                throw new ServiceException('第' . $i . '项请求头的值不能为空！');
             }
-        } else {
-            $data['details']['description']['ai'] = '';
+
+            $i++;
+        }
+        unset($header);
+        // ============================================================================================================= 请求头
+
+
+        if (!isset($data['post_format']) || !is_string($data['post_format'])) {
+            throw new ServiceException('请求格式参数无效！');
+        }
+        $data['post_format'] = trim($data['post_format']);
+        if (!in_array($data['post_format'], ['form', 'json'])) {
+            throw new ServiceException('请求格式参数无效！');
         }
 
-        $details['description'] = [
-            'type' => $data['details']['description']['type'],
-            'ai' => $data['details']['description']['ai'],
-        ];
-        // ============================================================================================================= 描述检测
 
+        if (!isset($data['post_data_type']) || !is_string($data['post_data_type'])) {
+            throw new ServiceException('数据处理方法参数无效！');
+        }
+        $data['post_data_type'] = trim($data['post_data_type']);
+        if (!in_array($data['post_data_type'], ['mapping', 'code'])) {
+            throw new ServiceException('数据处理方法参数无效！');
+        }
+
+        if ($data['post_data_type'] === 'mapping') {
+            //$data['post_data_code'] = '';
+
+            if (!isset($data['post_data_mapping']) || !is_array($data['post_data_mapping'])) {
+                throw new ServiceException('映射参数无效！');
+            }
+
+            $i = 1;
+            foreach ($data['post_data_mapping'] as &$mapping) {
+
+                if (!isset($mapping['name']) || !is_string($mapping['name'])) {
+                    throw new ServiceException('第' . $i . '项映射的名称参数无效！');
+                }
+                $mapping['name'] = trim($mapping['name']);
+                if ($mapping['name'] === '') {
+                    throw new ServiceException('第' . $i . '项映射的名称不能为空！');
+                }
+
+
+                if (!isset($mapping['value_type']) || !is_string($mapping['value_type'])) {
+                    throw new ServiceException('第' . $i . '项映射的值类型参数无效！');
+                }
+                $mapping['value_type'] = trim($mapping['value_type']);
+                if (!in_array($mapping['value_type'], ['field', 'custom'])) {
+                    throw new ServiceException('第' . $i . '项映射的值类型参数无效！');
+                }
+
+                if ($mapping['value_type'] === 'field') {
+                    //$mapping['custom'] = '';
+
+                    if (!isset($mapping['field']) || !is_string($mapping['field'])) {
+                        throw new ServiceException('第' . $i . '项映射的取用参数无效！');
+                    }
+                    $mapping['field'] = trim($mapping['field']);
+                    if ($mapping['field'] === '') {
+                        throw new ServiceException('第' . $i . '项映射的取用不能为空！');
+                    }
+
+                } else {
+                    //$mapping['field'] = '';
+
+                    if (!isset($mapping['custom']) || !is_string($mapping['custom'])) {
+                        throw new ServiceException('第' . $i . '项映射的自定义值参数无效！');
+                    }
+                    $mapping['custom'] = trim($mapping['custom']);
+                    if ($mapping['custom'] === '') {
+                        throw new ServiceException('第' . $i . '项映射的自定义值不能为空！');
+                    }
+                }
+
+                $i++;
+            }
+            unset($mapping);
+
+        } else {
+            //$data['post_data_mapping'] = [];
+
+            if (!isset($data['post_data_code']) || !is_string($data['post_data_code'])) {
+                throw new ServiceException('代码处理参数无效！');
+            }
+            $data['post_data_code'] = trim($data['post_data_code']);
+            if ($data['post_data_code'] === '') {
+                throw new ServiceException('代码处理未填写！');
+            }
+        }
+
+        if (!isset($data['success_mark']) || !is_string($data['success_mark'])) {
+            throw new ServiceException('成功标识参数无效！');
+        }
+        $data['success_mark'] = trim($data['success_mark']);
+        if ($data['success_mark'] === '') {
+            throw new ServiceException('成功标识未填写！');
+        }
+
+        if (!isset($data['interval']) || !is_numeric($data['interval'])) {
+            $data['interval'] = 1000;
+        } else {
+            $data['interval'] = (int)$data['interval'];
+        }
+
+        if ($data['interval'] < 0) {
+            $data['interval'] = 1000;
+        }
 
         if (!isset($data['is_enable']) || !is_numeric($data['is_enable'])) {
             $data['is_enable'] = 0;
@@ -151,12 +201,20 @@ class Publish
             $data['is_enable'] = 0;
         }
 
+
         $db->startTransaction();
         try {
             $now = date('Y-m-d H:i:s');
             $tuplePublish->name = $data['name'];
-            $tuplePublish->material_category_id = $data['material_category_id'];
-            $tuplePublish->details = serialize($details);
+            $tuplePublish->process_id = $data['process_id'];
+            $tuplePublish->post_url = $data['post_url'];
+            $tuplePublish->post_headers = serialize($data['post_headers']);
+            $tuplePublish->post_format = $data['post_format'];
+            $tuplePublish->post_data_type = $data['post_data_type'];
+            $tuplePublish->post_data_mapping = serialize($data['post_data_mapping']);
+            $tuplePublish->post_data_code = $data['post_data_code'];
+            $tuplePublish->success_mark = $data['success_mark'];
+            $tuplePublish->interval = $data['interval'];
             $tuplePublish->is_enable = $data['is_enable'];
             $tuplePublish->update_time = $now;
             if ($isNew) {
@@ -236,51 +294,8 @@ class Publish
             throw new ServiceException('发布任务（# ' . $publishId . '）不存在！');
         }
 
-        $details = unserialize($tuplePublish->details);
-        if (!isset($details['title'])) {
-            $details['title'] = [
-                'type' => 'ai',
-                'ai' => "",
-            ];
-        }
-        if (!isset($details['title']['type'])) {
-            $details['title']['type'] = 'ai';
-        }
-        if (!isset($details['title']['ai'])) {
-            $details['title']['ai'] = '';
-        }
-
-        if (!isset($details['summary'])) {
-            $details['summary'] = [
-                'type' => 'extract',
-                'extract' => 120,
-                'ai' => "",
-            ];
-        }
-        if (!isset($details['summary']['type'])) {
-            $details['summary']['type'] = 'ai';
-        }
-        if (!isset($details['summary']['extract'])) {
-            $details['summary']['extract'] = 120;
-        }
-        if (!isset($details['summary']['ai'])) {
-            $details['summary']['ai'] = '';
-        }
-
-        if (!isset($details['description'])) {
-            $details['description'] = [
-                'type' => 'ai',
-                'ai' => "",
-            ];
-        }
-        if (!isset($details['description']['type'])) {
-            $details['description']['type'] = 'ai';
-        }
-        if (!isset($details['description']['ai'])) {
-            $details['summary']['ai'] = '';
-        }
-
-        $tuplePublish->details = $details;
+        $tuplePublish->post_headers = unserialize($tuplePublish->post_headers);
+        $tuplePublish->post_data_mapping = unserialize($tuplePublish->post_data_mapping);
 
         return $tuplePublish->toObject();
     }

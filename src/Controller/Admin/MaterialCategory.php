@@ -246,7 +246,7 @@ class MaterialCategory extends Auth
     /**
      * 指定分类下的分类素材管理
      *
-     * @BePermission("分类下素材管理", ordering="1.34")
+     * @BePermission("*")
      */
     public function goMaterials()
     {

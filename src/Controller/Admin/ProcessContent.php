@@ -9,6 +9,8 @@ use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Form\Item\FormItemTinymce;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
+use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
+use Be\AdminPlugin\Toolbar\Item\ToolbarItemLink;
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
 
@@ -55,6 +57,36 @@ class ProcessContent extends Auth
                             'value' => $processId,
                         ],
                     ],
+                ],
+
+                'titleToolbar' => [
+                    'items' => [
+                        [
+                            'label' => '导出',
+                            'driver' => ToolbarItemDropDown::class,
+                            'ui' => [
+                                'icon' => 'bi-download',
+                            ],
+                            'menus' => [
+                                [
+                                    'label' => 'CSV',
+                                    'task' => 'export',
+                                    'postData' => [
+                                        'driver' => 'csv',
+                                    ],
+                                    'target' => 'blank',
+                                ],
+                                [
+                                    'label' => 'EXCEL',
+                                    'task' => 'export',
+                                    'postData' => [
+                                        'driver' => 'excel',
+                                    ],
+                                    'target' => 'blank',
+                                ],
+                            ]
+                        ],
+                    ]
                 ],
 
                 'tableToolbar' => [
@@ -216,6 +248,40 @@ class ProcessContent extends Auth
                         ],
                     ]
                 ],
+            ],
+
+            'export' => [
+                'items' => [
+                    [
+                        'name' => 'id',
+                        'label' => 'ID',
+                    ],
+                    [
+                        'name' => 'process_id',
+                        'label' => '加工任务',
+                        'keyValues' => $processKeyValues,
+                    ],
+                    [
+                        'name' => 'title',
+                        'label' => '标题',
+                    ],
+                    [
+                        'name' => 'summary',
+                        'label' => '摘要',
+                    ],
+                    [
+                        'name' => 'description',
+                        'label' => '描述',
+                    ],
+                    [
+                        'name' => 'create_time',
+                        'label' => '创建时间',
+                    ],
+                    [
+                        'name' => 'update_time',
+                        'label' => '更新时间',
+                    ],
+                ]
             ],
 
         ])->execute();

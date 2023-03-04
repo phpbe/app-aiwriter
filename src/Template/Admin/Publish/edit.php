@@ -113,7 +113,7 @@
 
                         <div class="be-row be-mt-100">
                             <div class="be-col-24 be-md-col-auto be-lh-250">
-                                加工任务：
+                                <span class="be-c-red">*</span> 加工任务：
                             </div>
                             <div class="be-col-24 be-md-col-auto">
                                 <div class="be-pl-50 be-pt-100"></div>
@@ -138,7 +138,7 @@
 
                         <div class="be-row be-mt-100">
                             <div class="be-col-24 be-md-col-auto be-lh-250">
-                                发布网址：
+                                <span class="be-c-red">*</span> 发布网址：
                             </div>
                             <div class="be-col-24 be-md-col-auto">
                                 <div class="be-pl-50 be-pt-100"></div>
@@ -178,6 +178,20 @@
                                     <?php $formData['interval'] = ($this->publish ? $this->publish->interval : 1000); ?>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="be-pt-50">成功标记：</td>
+                                <td class="be-pt-50">
+                                    <el-input
+                                            type="text"
+                                            placeholder="请输入成功标记"
+                                            v-model = "formData.success_mark"
+                                            size="medium"
+                                            maxlength="60"
+                                            show-word-limit>
+                                    </el-input>
+                                    <?php $formData['success_mark'] = ($this->publish ? $this->publish->success_mark : '[OK]'); ?>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -187,7 +201,7 @@
             <div class="be-mt-150 be-p-150 be-bc-fff">
                 <div class="be-fs-110 be-pb-50 be-bb-eee">请求头</div>
 
-                <div class="be-row be-mt-100 publish-item-header" v-if="formData.headers.length > 0">
+                <div class="be-row be-mt-100 publish-item-header" v-if="formData.post_headers.length > 0">
                     <div class="be-col">
                         <div class="be-pl-100">名称</div>
                     </div>
@@ -205,7 +219,7 @@
                 </div>
 
 
-                <div class="be-row publish-item" v-for="header, headerIndex in formData.headers" :key="headerIndex">
+                <div class="be-row publish-item" v-for="header, headerIndex in formData.post_headers" :key="headerIndex">
                     <div class="be-col">
                         <el-input
                                 type="text"
@@ -239,9 +253,9 @@
                 <el-button class="be-mt-100" size="small" type="primary" @click="addHeader">新增请求头</el-button>
                 <?php
                 if ($this->publish) {
-                    $formData['headers'] = $this->publish->headers;
+                    $formData['post_headers'] = $this->publish->post_headers;
                 } else {
-                    $formData['headers'] = [];
+                    $formData['post_headers'] = [];
                 }
                 ?>
             </div>
@@ -255,7 +269,7 @@
                         请求格式：
                     </div>
                     <div class="be-col">
-                        <el-radio v-model="formData.post_format" label="form">FORM 表音</el-radio>
+                        <el-radio v-model="formData.post_format" label="form">FORM 表单</el-radio>
                         <el-radio v-model="formData.post_format" label="json">JSON 数据</el-radio>
                     </div>
                 </div>
@@ -278,6 +292,12 @@
                     <div class="be-row be-mt-100 publish-item-header" v-if="formData.post_data_mapping.length > 0">
                         <div class="be-col">
                             <div class="be-pl-100">名称</div>
+                        </div>
+                        <div class="be-col-auto">
+                            <div class="be-pl-100"></div>
+                        </div>
+                        <div class="be-col be-ta-center">
+                            值类型
                         </div>
                         <div class="be-col-auto">
                             <div class="be-pl-100"></div>
@@ -307,15 +327,34 @@
                         <div class="be-col-auto">
                             <div class="be-pl-100"></div>
                         </div>
+                        <div class="be-col be-ta-center be-lh-250">
+                            <el-radio v-model="mapping.value_type" label="field">取用</el-radio>
+                            <el-radio v-model="mapping.value_type" label="custom">自定义</el-radio>
+                        </div>
+                        <div class="be-col-auto">
+                            <div class="be-pl-100"></div>
+                        </div>
                         <div class="be-col">
-                            <el-input
-                                    type="text"
-                                    placeholder="请输入值"
-                                    v-model = "mapping.value"
-                                    size="medium"
-                                    maxlength="600"
-                                    show-word-limit>
-                            </el-input>
+                            <div v-show="mapping.value_type === 'field'">
+                                <el-select v-model="mapping.field" size="medium">
+                                    <el-option label="ID" value="id"></el-option>
+                                    <el-option label="标题" value="title"></el-option>
+                                    <el-option label="摘要" value="summary"></el-option>
+                                    <el-option label="描述" value="description"></el-option>
+                                    <el-option label="创建时间" value="create_time"></el-option>
+                                    <el-option label="更新时间" value="update_time"></el-option>
+                                </el-select>
+                            </div>
+                            <div v-show="mapping.value_type === 'custom'">
+                                <el-input
+                                        type="text"
+                                        placeholder="请输入自定义值"
+                                        v-model = "mapping.custom"
+                                        size="medium"
+                                        maxlength="300"
+                                        show-word-limit>
+                                </el-input>
+                            </div>
                         </div>
                         <div class="be-col-auto">
                             <div class="publish-item-op">
@@ -327,11 +366,36 @@
                     if ($this->publish) {
                         $formData['post_data_mapping'] = $this->publish->post_data_mapping;
                     } else {
-                        $formData['post_data_mapping'] = [];
+                        $formData['post_data_mapping'] = [
+                            [
+                                'name' => 'unique_key',
+                                'value_type' => 'field',
+                                'field' => 'id',
+                                'custom' => '',
+                            ],
+                            [
+                                'name' => 'title',
+                                'value_type' => 'field',
+                                'field' => 'title',
+                                'custom' => '',
+                            ],
+                            [
+                                'name' => 'summary',
+                                'value_type' => 'field',
+                                'field' => 'summary',
+                                'custom' => '',
+                            ],
+                            [
+                                'name' => 'description',
+                                'value_type' => 'field',
+                                'field' => 'description',
+                                'custom' => '',
+                            ],
+                        ];
                     }
                     ?>
 
-                    <el-button class="be-mt-100" size="small" type="primary" @click="addPostDataMapping">新增请求头</el-button>
+                    <el-button class="be-mt-100" size="small" type="primary" @click="addPostDataMapping">新增字段</el-button>
 
                 </div>
 
@@ -340,7 +404,7 @@
 
                     <div class="be-row">
                         <div class="be-col">
-                            <pre>function (object $row): array {</pre>
+                            <pre>function (object $row) {</pre>
                             <?php
                             $driver = new \Be\AdminPlugin\Form\Item\FormItemCode([
                                 'name' => 'post_data_code',
@@ -353,10 +417,10 @@
                             } else {
 
                                 $code = '$arr = [];' . "\n";
-                                $code .= '$arr[\'unique_key\'] = $row[\'id\'];' . "\n";
-                                $code .= '$arr[\'title\'] = $row[\'title\'];' . "\n";
-                                $code .= '$arr[\'summary\'] = $row[\'summary\'];' . "\n";
-                                $code .= '$arr[\'description\'] = $row[\'description\'];' . "\n";
+                                $code .= '$arr[\'unique_key\'] = $row->id;' . "\n";
+                                $code .= '$arr[\'title\'] = $row->title;' . "\n";
+                                $code .= '$arr[\'summary\'] = $row->summary;' . "\n";
+                                $code .= '$arr[\'description\'] = $row->description;' . "\n";
                                 $code .= "\n";
                                 $code .= 'return $arr;' . "\n";
 
@@ -373,7 +437,7 @@
                         <div class="be-col">
                             参数 $row 为加工好的素材，结构如下：
                             <pre><?php
-                            $row = [
+                            $row = (object)[
                                 'id' => '00e9e677-b801-11ed-a779-04d9f5f8b7ed',
                                 'process_id' => 'cb1cde02-b761-11ed-bdf5-04d9f5f8b7ed',
                                 'material_id' => '0f46d705-b74c-11ed-8b1f-04d9f5f8b7ed',
@@ -413,19 +477,21 @@
             },
             methods: {
                 addHeader() {
-                    this.formData.headers.push({
+                    this.formData.post_headers.push({
                        name: "",
                        value: "",
                     });
                 },
                 deleteHeader(header) {
-                    this.formData.headers.splice(this.formData.headers.indexOf(header), 1);
+                    this.formData.post_headers.splice(this.formData.post_headers.indexOf(header), 1);
                 },
 
                 addPostDataMapping() {
                     this.formData.post_data_mapping.push({
                         name: "",
-                        value: "",
+                        value_type: "custom",
+                        field: "",
+                        custom: "",
                     });
                 },
                 deletePostDataMapping(mapping) {

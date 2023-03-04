@@ -2,13 +2,12 @@
 
 namespace Be\App\AiWriter\Controller\Admin;
 
-
-use Be\AdminPlugin\Detail\Item\DetailItemHtml;
-use Be\AdminPlugin\Form\Item\FormItemInputTextArea;
+use Be\AdminPlugin\Detail\Item\DetailItemCode;
+use Be\AdminPlugin\Detail\Item\DetailItemToggleIcon;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
-use Be\AdminPlugin\Form\Item\FormItemTinymce;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
+use Be\AdminPlugin\Table\Item\TableItemToggleIcon;
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
 
@@ -54,6 +53,20 @@ class PublishContent extends Auth
                             'defaultValue' => 'all',
                             'value' => $publishId,
                         ],
+                        [
+                            'name' => 'is_success',
+                            'label' => '是否成功',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => \Be\Util\Arr::merge([
+                                'all' => '全部',
+                            ], [
+                                '0' => '夫败',
+                                '1' => '成功',
+                            ]),
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                            'value' => $publishId,
+                        ],
                     ],
                 ],
 
@@ -83,8 +96,12 @@ class PublishContent extends Auth
                         [
                             'name' => 'title',
                             'label' => '标题',
-                            'driver' => TableItemLink::class,
+                            'value' => function($row) {
+                                $sql = 'SELECT IFNULL(title, \'\') FROM aiwriter_process_content WHERE id=?';
+                                return Be::getDb()->getValue($sql, [$row['process_content_id']]);
+                            },
                             'align' => 'left',
+                            'driver' => TableItemLink::class,
                             'task' => 'detail',
                             'target' => 'drawer', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'drawer' => [
@@ -96,6 +113,12 @@ class PublishContent extends Auth
                             'label' => '发布任务',
                             'keyValues' => $publishKeyValues,
                             'width' => '240',
+                        ],
+                        [
+                            'name' => 'is_success',
+                            'label' => '是否成功',
+                            'driver' => TableItemToggleIcon::class,
+                            'width' => '120',
                         ],
                         [
                             'name' => 'create_time',
@@ -146,42 +169,9 @@ class PublishContent extends Auth
                 ],
             ],
 
-            'edit' => [
-                'title' => '编辑管理员',
-                'form' => [
-                    'items' => [
-                        [
-                            'name' => 'title',
-                            'label' => '标题',
-                            'ui' => [
-                                'maxlength' => 120,
-                                'show-word-limit' => true,
-                            ],
-                            'required' => true,
-                        ],
-                        [
-                            'name' => 'summary',
-                            'driver' => FormItemInputTextArea::class,
-                            'label' => '摘要',
-                            'ui' => [
-                                'maxlength' => 500,
-                                'show-word-limit' => true,
-                            ],
-                        ],
-                        [
-                            'name' => 'description',
-                            'label' => '描述',
-                            'driver' => FormItemTinymce::class,
-                            'option' => [
-                                'toolbar_sticky_offset' => 0
-                            ],
-                        ],
-                    ]
-                ],
-            ],
 
             'detail' => [
-                'title' => '文章详情',
+                'title' => '发布记录详情',
                 'form' => [
                     'items' => [
                         [
@@ -196,15 +186,21 @@ class PublishContent extends Auth
                         [
                             'name' => 'title',
                             'label' => '标题',
+                            'value' => function($row) {
+                                $sql = 'SELECT IFNULL(title, \'\') FROM aiwriter_process_content WHERE id=?';
+                                return Be::getDb()->getValue($sql, [$row['process_content_id']]);
+                            },
                         ],
                         [
-                            'name' => 'summary',
-                            'label' => '摘要',
+                            'name' => 'is_success',
+                            'label' => '是否成功',
+                            'driver' => DetailItemToggleIcon::class,
                         ],
                         [
-                            'name' => 'description',
-                            'label' => '描述',
-                            'driver' => DetailItemHtml::class,
+                            'name' => 'response',
+                            'label' => '响应',
+                            'driver' => DetailItemCode::class,
+                            'language' => 'auto',
                         ],
                         [
                             'name' => 'create_time',

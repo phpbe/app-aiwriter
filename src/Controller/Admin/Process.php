@@ -2,6 +2,9 @@
 
 namespace Be\App\AiWriter\Controller\Admin;
 
+use Be\AdminPlugin\Detail\Item\DetailItemHtml;
+use Be\AdminPlugin\Detail\Item\DetailItemProgress;
+use Be\AdminPlugin\Detail\Item\DetailItemSwitch;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Table\Item\TableItemProgress;
@@ -25,6 +28,11 @@ class Process extends Auth
      */
     public function index()
     {
+        $MmaterialCategoryKeyValues = Be::getService('App.AiWriter.Admin.MaterialCategory')->getCategoryKeyValues();
+        $MmaterialCategoryKeyValues = \Be\Util\Arr::merge([
+            '' => '未分类',
+        ], $MmaterialCategoryKeyValues);
+
         Be::getAdminPlugin('Curd')->setting([
             'label' => '加工任务',
             'table' => 'aiwriter_process',
@@ -210,6 +218,128 @@ class Process extends Auth
                 ],
             ],
 
+            'detail' => [
+                'title' => '文章详情',
+                'form' => [
+                    'items' => [
+                        [
+                            'name' => 'id',
+                            'label' => 'ID',
+                        ],
+                        [
+                            'name' => 'name',
+                            'label' => '名称',
+                        ],
+                        [
+                            'name' => 'material_category_id',
+                            'label' => '素材分类',
+                            'keyValues' => $MmaterialCategoryKeyValues,
+                        ],
+                        [
+                            'name' => 'material_count',
+                            'label' => '素材数',
+                            'value' => function ($row) {
+                                $db = Be::getDb();
+                                if ($row['material_category_id'] === 'all') {
+                                    $sql = 'SELECT COUNT(*) FROM aiwriter_material';
+                                    $count = $db->getValue($sql);
+                                } else {
+                                    $sql = 'SELECT COUNT(*) FROM aiwriter_material WHERE category_id = ?';
+                                    $count = $db->getValue($sql, [$row['material_category_id']]);
+                                }
+
+                                return $count;
+                            },
+                        ],
+                        [
+                            'name' => 'process_count',
+                            'label' => '已加工',
+                            'value' => function ($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE process_id = ?';
+                                $count = Be::getDb()->getValue($sql, [$row['id']]);
+                                return $count;
+                            },
+                        ],
+                        [
+                            'name' => 'details',
+                            'label' => '素材加工',
+                            'driver' => DetailItemHtml::class,
+                            'value' => function ($row) {
+                                $details = unserialize($row['details']);
+                                $html = '';
+
+                                $html .= '<div>标题：';
+                                switch ($details['title']['type']) {
+                                    case 'material':
+                                        $html .= '取用素材标题';
+                                        break;
+                                    case 'ai':
+                                        $html .= 'AI处理';
+                                        break;
+                                }
+                                $html .= '</div>';
+                                if ($details['title']['type'] === 'ai') {
+                                    $html .= '<div>';
+                                    $html .= nl2br($details['title']['ai']);
+                                    $html .= '</div>';
+                                }
+
+
+                                $html .= '<div class="be-mt-200 be-bt-ccc">摘要：';
+                                switch ($details['summary']['type']) {
+                                    case 'material':
+                                        $html .= '取用素材摘要';
+                                        break;
+                                    case 'extract':
+                                        $html .= '从最终描述中提取：' . $details['summary']['extract'];
+                                        break;
+                                    case 'ai':
+                                        $html .= 'AI处理';
+                                        break;
+                                }
+                                $html .= '</div>';
+                                if ($details['summary']['type'] === 'ai') {
+                                    $html .= '<div>';
+                                    $html .= nl2br($details['summary']['ai']);
+                                    $html .= '</div>';
+                                }
+
+                                $html .= '<div class="be-mt-200 be-bt-ccc">描述：';
+                                switch ($details['description']['type']) {
+                                    case 'material':
+                                        $html .= '取用素材摘要';
+                                        break;
+                                    case 'ai':
+                                        $html .= 'AI处理';
+                                        break;
+                                }
+                                $html .= '</div>';
+                                if ($details['description']['type'] === 'ai') {
+                                    $html .= '<div>';
+                                    $html .= nl2br($details['description']['ai']);
+                                    $html .= '</div>';
+                                }
+
+                                return $html;
+                            },
+                        ],
+                        [
+                            'name' => 'is_enable',
+                            'driver' => DetailItemSwitch::class,
+                            'label' => '是否启用',
+                        ],
+                        [
+                            'name' => 'create_time',
+                            'label' => '创建时间',
+                        ],
+                        [
+                            'name' => 'update_time',
+                            'label' => '更新时间',
+                        ],
+                    ]
+                ],
+            ],
+
         ])->execute();
     }
     
@@ -359,5 +489,42 @@ class Process extends Auth
     }
 
 
+    /**
+     * 指定分类下的分类素材管理
+     *
+     * @BePermission("*")
+     */
+    public function goMaterials()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        $postData = $request->post('data', '', '');
+        if ($postData) {
+            $postData = json_decode($postData, true);
+            if (isset($postData['row']['id']) && $postData['row']['id']) {
+                $response->redirect(beAdminUrl('AiWriter.Material.index', ['category_id' => $postData['row']['material_category_id']]));
+            }
+        }
+    }
+
+    /**
+     * 指定加工任务下的加工结果
+     *
+     * @BePermission("*")
+     */
+    public function goProcessContents()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        $postData = $request->post('data', '', '');
+        if ($postData) {
+            $postData = json_decode($postData, true);
+            if (isset($postData['row']['id']) && $postData['row']['id']) {
+                $response->redirect(beAdminUrl('AiWriter.ProcessContent.index', ['process_id' => $postData['row']['id']]));
+            }
+        }
+    }
 
 }
