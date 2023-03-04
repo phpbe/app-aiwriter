@@ -130,6 +130,15 @@ class ProcessContent extends Auth
                             'width' => '240',
                         ],
                         [
+                            'name' => 'publish_count',
+                            'label' => '发布',
+                            'value' => function($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_publish_content WHERE process_content_id=?';
+                                return Be::getDb()->getValue($sql, [$row['id']]);
+                            },
+                            'width' => '120',
+                        ],
+                        [
                             'name' => 'create_time',
                             'label' => '创建时间',
                             'width' => '180',
@@ -237,6 +246,14 @@ class ProcessContent extends Auth
                             'name' => 'description',
                             'label' => '描述',
                             'driver' => DetailItemHtml::class,
+                        ],
+                        [
+                            'name' => 'publish_count',
+                            'label' => '发布',
+                            'value' => function($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_publish_content WHERE process_content_id=?';
+                                return Be::getDb()->getValue($sql, [$row['id']]);
+                            },
                         ],
                         [
                             'name' => 'create_time',

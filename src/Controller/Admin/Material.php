@@ -160,6 +160,15 @@ class Material extends Auth
                             'keyValues' => $categoryKeyValues,
                         ],
                         [
+                            'name' => 'process_count',
+                            'label' => '加工',
+                            'value' => function($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE material_id=?';
+                                return Be::getDb()->getValue($sql, [$row['id']]);
+                            },
+                            'width' => '120',
+                        ],
+                        [
                             'name' => 'create_time',
                             'label' => '创建时间',
                             'width' => '180',
@@ -352,6 +361,14 @@ class Material extends Auth
                             'name' => 'description',
                             'label' => '描述',
                             'driver' => DetailItemHtml::class,
+                        ],
+                        [
+                            'name' => 'process_count',
+                            'label' => '加工',
+                            'value' => function($row) {
+                                $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE material_id=?';
+                                return Be::getDb()->getValue($sql, [$row['id']]);
+                            },
                         ],
                         [
                             'name' => 'create_time',
