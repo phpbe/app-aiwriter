@@ -97,8 +97,12 @@ class PublishContent extends Auth
                             'name' => 'title',
                             'label' => '标题',
                             'value' => function($row) {
-                                $sql = 'SELECT IFNULL(title, \'\') FROM aiwriter_process_content WHERE id=?';
-                                return Be::getDb()->getValue($sql, [$row['process_content_id']]);
+                                $sql = 'SELECT title FROM aiwriter_process_content WHERE id=?';
+                                $title = Be::getDb()->getValue($sql, [$row['process_content_id']]);
+                                if ($title) {
+                                    return $title;
+                                }
+                                return '';
                             },
                             'align' => 'left',
                             'driver' => TableItemLink::class,
@@ -173,8 +177,12 @@ class PublishContent extends Auth
                             'name' => 'title',
                             'label' => '标题',
                             'value' => function($row) {
-                                $sql = 'SELECT IFNULL(title, \'\') FROM aiwriter_process_content WHERE id=?';
-                                return Be::getDb()->getValue($sql, [$row['process_content_id']]);
+                                $sql = 'SELECT title FROM aiwriter_process_content WHERE id=?';
+                                $title = Be::getDb()->getValue($sql, [$row['process_content_id']]);
+                                if ($title) {
+                                    return $title;
+                                }
+                                return '';
                             },
                         ],
                         [
