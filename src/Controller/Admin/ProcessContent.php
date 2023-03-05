@@ -56,6 +56,28 @@ class ProcessContent extends Auth
                             'defaultValue' => 'all',
                             'value' => $processId,
                         ],
+                        [
+                            'name' => 'is_published',
+                            'label' => '是否发布',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => [
+                                'all' => '全部',
+                                'n' => '未发布',
+                                'y' => '已发布',
+                            ],
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                            'buildSql' => function ($dbName, $formData) {
+                                if (isset($formData['is_published'])) {
+                                    if ($formData['is_published'] === 'n') {
+                                        return 'id NOT IN (SELECT process_content_id FROM aiwriter_publish_content)';
+                                    } elseif ($formData['is_published'] === 'y') {
+                                        return 'id IN (SELECT process_content_id FROM aiwriter_publish_content)';
+                                    }
+                                }
+                                return '';
+                            },
+                        ],
                     ],
                 ],
 

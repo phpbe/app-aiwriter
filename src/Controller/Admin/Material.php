@@ -62,6 +62,28 @@ class Material extends Auth
                             'defaultValue' => 'all',
                             'value' => $categoryId,
                         ],
+                        [
+                            'name' => 'is_processed',
+                            'label' => '是否加工',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => [
+                                'all' => '全部',
+                                'n' => '未加工',
+                                'y' => '已加工',
+                            ],
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                            'buildSql' => function ($dbName, $formData) {
+                                if (isset($formData['is_processed'])) {
+                                    if ($formData['is_processed'] === 'n') {
+                                        return 'id NOT IN (SELECT material_id FROM aiwriter_process_content)';
+                                    } elseif ($formData['is_processed'] === 'y') {
+                                        return 'id IN (SELECT material_id FROM aiwriter_process_content)';
+                                    }
+                                }
+                                return '';
+                            },
+                        ],
                     ],
                 ],
 
