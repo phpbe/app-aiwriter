@@ -68,8 +68,8 @@ class Process extends Task
                             $title = $material->title;
                             break;
                         case 'ai':
-                            $prompt = $this->formatAiPrompt($processDetails['title']['ai'], $material);
-                            $title = $this->chatCompletion($prompt);
+                            $messages = $this->formatAiMessages($processDetails['title'], $material);
+                            $title = $this->chatCompletion($messages);
                             break;
                     }
                     $title = str_replace("\n", '', $title);
@@ -83,8 +83,8 @@ class Process extends Task
                             $description = $material->description;
                             break;
                         case 'ai':
-                            $prompt = $this->formatAiPrompt($processDetails['description']['ai'], $material);
-                            $description = $this->chatCompletion($prompt);
+                            $messages = $this->formatAiMessages($processDetails['description'], $material);
+                            $description = $this->chatCompletion($messages);
                             break;
                     }
                     $description = ltrim($description, ",.;?，、。；？ \t\n\r\0\x0B");
@@ -111,8 +111,8 @@ class Process extends Task
                             }
                             break;
                         case 'ai':
-                            $prompt = $this->formatAiPrompt($processDetails['summary']['ai'], $material);
-                            $summary = $this->chatCompletion($prompt);
+                            $messages = $this->formatAiMessages($processDetails['summary'], $material);
+                            $summary = $this->chatCompletion($messages);
                             break;
                     }
                     $summary = str_replace("\n", '', $summary);
@@ -134,26 +134,43 @@ class Process extends Task
                 } catch (\Throwable $t) {
                     Be::getLog()->warning($t);
                 }
-
             }
-
         }
-
     }
 
     /**
      * 格式化提问
      *
-     * @param string $prompt
+     * @param array $ai
      * @param object $material
-     * @return string
+     * @return array
      */
-    private function formatAiPrompt(string $prompt, object $material): string
+    private function formatAiMessages(array $ai, object $material): array
     {
-        $prompt = str_replace('{素材标题}', $material->title, $prompt);
-        $prompt = str_replace('{素材摘要}', $material->summary, $prompt);
-        $prompt = str_replace('{素材描述}', $material->description, $prompt);
-        return $prompt;
+        $messages = [];
+
+        if (isset($ai['ai_system_prompt']) && is_string($ai['ai_system_prompt']) && $ai['ai_system_prompt'] !== '') {
+            $messages[] = [
+                'role' => 'system',
+                'content' => $ai['ai_system_prompt'],
+            ];
+        }
+
+        if (!isset($ai['ai_user_prompt']) || !is_string($ai['ai_user_prompt']) || $ai['ai_user_prompt'] === '') {
+            throw new TaskException('加工任务未配置AI处理的用户提示语！');
+        }
+
+        $userPrompt = $ai['ai_user_prompt'];
+        $userPrompt = str_replace('{素材标题}', $material->title, $userPrompt);
+        $userPrompt = str_replace('{素材摘要}', $material->summary, $userPrompt);
+        $userPrompt = str_replace('{素材描述}', $material->description, $userPrompt);
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => $userPrompt,
+        ];
+
+        return $messages;
     }
 
     /**
@@ -163,7 +180,7 @@ class Process extends Task
      * @return string
      * @throws TaskException
      */
-    private function chatCompletion(string $prompt): string
+    private function chatCompletion(array $messages): string
     {
         $serviceApi = Be::getService('App.Openai.Api');
 
@@ -174,13 +191,6 @@ class Process extends Task
 
             $hasError = false;
             try {
-                $messages = [
-                    [
-                        'role' => 'user',
-                        'content' => $prompt,
-                    ],
-                ];
-
                 $answer = $serviceApi->chatCompletion($messages);
             } catch (\Throwable $t) {
                 $hasError = true;

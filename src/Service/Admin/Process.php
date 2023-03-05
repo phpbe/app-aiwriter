@@ -62,17 +62,23 @@ class Process
         }
 
         if ($data['details']['title']['type'] === 'ai') {
-            if (!isset($data['details']['title']['ai']) || !is_string($data['details']['title']['ai'])) {
-                throw new ServiceException('素材加工 - 标题.AI处理参数缺失！');
+            if (!isset($data['details']['title']['ai_system_prompt']) || !is_string($data['details']['title']['ai_system_prompt'])) {
+                throw new ServiceException('素材加工 - 标题.AI处理参数（系统提示语）缺失！');
+            }
+
+            if (!isset($data['details']['title']['ai_user_prompt']) || !is_string($data['details']['title']['ai_user_prompt'])) {
+                throw new ServiceException('素材加工 - 标题.AI处理参数（用户提示语）缺失！');
             }
         } else {
-            $data['details']['title']['ai'] = '';
+            $data['details']['title']['ai_system_prompt'] = '';
+            $data['details']['title']['ai_user_prompt'] = '';
         }
 
         $details = [];
         $details['title'] = [
             'type' => $data['details']['title']['type'],
-            'ai' => $data['details']['title']['ai'],
+            'ai_system_prompt' => $data['details']['title']['ai_system_prompt'],
+            'ai_user_prompt' => $data['details']['title']['ai_user_prompt'],
         ];
         // ============================================================================================================= 标题检测
 
@@ -99,17 +105,23 @@ class Process
         }
 
         if ($data['details']['summary']['type'] === 'ai') {
-            if (!isset($data['details']['summary']['ai']) || !is_string($data['details']['summary']['ai'])) {
-                throw new ServiceException('素材加工 - 摘要.AI处理参数缺失！');
+            if (!isset($data['details']['summary']['ai_system_prompt']) || !is_string($data['details']['summary']['ai_system_prompt'])) {
+                throw new ServiceException('素材加工 - 摘要.AI处理参数（系统提示语）缺失！');
+            }
+
+            if (!isset($data['details']['summary']['ai_user_prompt']) || !is_string($data['details']['summary']['ai_user_prompt'])) {
+                throw new ServiceException('素材加工 - 摘要.AI处理参数（用户提示语）缺失！');
             }
         } else {
-            $data['details']['summary']['ai'] = '';
+            $data['details']['summary']['ai_system_prompt'] = '';
+            $data['details']['summary']['ai_user_prompt'] = '';
         }
 
         $details['summary'] = [
             'type' => $data['details']['summary']['type'],
             'extract' => $data['details']['summary']['extract'],
-            'ai' => $data['details']['summary']['ai'],
+            'ai_system_prompt' => $data['details']['summary']['ai_system_prompt'],
+            'ai_user_prompt' => $data['details']['summary']['ai_user_prompt'],
         ];
         // ============================================================================================================= 摘要检测
 
@@ -128,16 +140,22 @@ class Process
         }
 
         if ($data['details']['description']['type'] === 'ai') {
-            if (!isset($data['details']['description']['ai']) || !is_string($data['details']['description']['ai'])) {
-                throw new ServiceException('素材加工 - 摘要.AI处理参数缺失！');
+            if (!isset($data['details']['description']['ai_system_prompt']) || !is_string($data['details']['description']['ai_system_prompt'])) {
+                throw new ServiceException('素材加工 - 描述.AI处理参数（系统提示语）缺失！');
+            }
+
+            if (!isset($data['details']['description']['ai_user_prompt']) || !is_string($data['details']['description']['ai_user_prompt'])) {
+                throw new ServiceException('素材加工 - 描述.AI处理参数（用户提示语）缺失！');
             }
         } else {
-            $data['details']['description']['ai'] = '';
+            $data['details']['description']['ai_system_prompt'] = '';
+            $data['details']['description']['ai_user_prompt'] = '';
         }
 
         $details['description'] = [
             'type' => $data['details']['description']['type'],
-            'ai' => $data['details']['description']['ai'],
+            'ai_system_prompt' => $data['details']['description']['ai_system_prompt'],
+            'ai_user_prompt' => $data['details']['description']['ai_user_prompt'],
         ];
         // ============================================================================================================= 描述检测
 
@@ -240,21 +258,26 @@ class Process
         if (!isset($details['title'])) {
             $details['title'] = [
                 'type' => 'ai',
-                'ai' => "",
+                'ai_system_prompt' => "",
+                'ai_user_prompt' => "",
             ];
         }
         if (!isset($details['title']['type'])) {
             $details['title']['type'] = 'ai';
         }
-        if (!isset($details['title']['ai'])) {
-            $details['title']['ai'] = '';
+        if (!isset($details['title']['ai_system_prompt'])) {
+            $details['title']['ai_system_prompt'] = '';
+        }
+        if (!isset($details['title']['ai_user_prompt'])) {
+            $details['title']['ai_user_prompt'] = '';
         }
 
         if (!isset($details['summary'])) {
             $details['summary'] = [
                 'type' => 'extract',
                 'extract' => 120,
-                'ai' => "",
+                'ai_system_prompt' => "",
+                'ai_user_prompt' => "",
             ];
         }
         if (!isset($details['summary']['type'])) {
@@ -263,21 +286,28 @@ class Process
         if (!isset($details['summary']['extract'])) {
             $details['summary']['extract'] = 120;
         }
-        if (!isset($details['summary']['ai'])) {
-            $details['summary']['ai'] = '';
+        if (!isset($details['summary']['ai_system_prompt'])) {
+            $details['summary']['ai_system_prompt'] = '';
+        }
+        if (!isset($details['summary']['ai_user_prompt'])) {
+            $details['summary']['ai_user_prompt'] = '';
         }
 
         if (!isset($details['description'])) {
             $details['description'] = [
                 'type' => 'ai',
-                'ai' => "",
+                'ai_system_prompt' => "",
+                'ai_user_prompt' => "",
             ];
         }
         if (!isset($details['description']['type'])) {
             $details['description']['type'] = 'ai';
         }
-        if (!isset($details['description']['ai'])) {
-            $details['summary']['ai'] = '';
+        if (!isset($details['description']['ai_system_prompt'])) {
+            $details['description']['ai_system_prompt'] = '';
+        }
+        if (!isset($details['description']['ai_user_prompt'])) {
+            $details['description']['ai_user_prompt'] = '';
         }
 
         $tupleProcess->details = $details;

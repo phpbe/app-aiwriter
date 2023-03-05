@@ -139,20 +139,6 @@ class PublishContent extends Auth
                         'items' => [
                             [
                                 'label' => '',
-                                'tooltip' => '编辑',
-                                'ui' => [
-                                    ':underline' => 'false',
-                                    'style' => 'font-size: 20px;',
-                                ],
-                                'icon' => 'el-icon-edit',
-                                'task' => 'edit',
-                                'target' => 'drawer', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
-                                'drawer' => [
-                                    'width' => '80%'
-                                ],
-                            ],
-                            [
-                                'label' => '',
                                 'tooltip' => '删除',
                                 'ui' => [
                                     'type' => 'danger',
