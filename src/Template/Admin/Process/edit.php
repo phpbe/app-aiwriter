@@ -469,9 +469,9 @@
                 insertTemplate: function (type, role) {
                     let field = type + "_" + role;
                     if (role === "system") {
-                        this.formData.details[field].ai_system_prompt = this.template[field].replace("<br>", "\n");
+                        this.formData.details[type].ai_system_prompt = this.template[field].replace("<br>", "\n");
                     } else {
-                        this.formData.details[field].ai_user_prompt = this.template[field].replace("<br>", "\n");
+                        this.formData.details[type].ai_user_prompt = this.template[field].replace("<br>", "\n");
                     }
                     this.template[field] = "";
                 },
