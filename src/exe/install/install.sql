@@ -62,6 +62,7 @@ ADD KEY `material_id` (`material_id`);
 CREATE TABLE `aiwriter_process_template` (
 `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `type` varchar(30) NOT NULL DEFAULT '' COMMENT '类型',
+`role` varchar(30) NOT NULL DEFAULT 'user' COMMENT '角色',
 `content` varchar(500) NOT NULL DEFAULT '' COMMENT '内容',
 `ordering` int(11) NOT NULL DEFAULT '100' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -70,14 +71,15 @@ CREATE TABLE `aiwriter_process_template` (
 
 ALTER TABLE `aiwriter_process_template`
 ADD PRIMARY KEY (`id`),
-ADD KEY `type` (`type`);
+ADD KEY `type_role` (`type`, `role`);
 
-INSERT INTO `aiwriter_process_template` (`id`, `type`, `content`, `ordering`, `create_time`, `update_time`) VALUES
-((SELECT UUID()), 'title', '改写以下内容，让它更符合SEO，更吸引用户，长度不超过30个字：\n{素材标题}', 100,  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-((SELECT UUID()), 'summary', '改写以下内容，让它更符合SEO，更吸引用户：\n{素材标题}', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-((SELECT UUID()), 'description', '根据以下内容，生成一篇文章，内容尽可能多：\n{素材标题}', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
-
+INSERT INTO `aiwriter_process_template` (`id`, `type`, `role`, `content`, `ordering`, `create_time`, `update_time`) VALUES
+((SELECT UUID()), 'title', 'system', '假定你在一家Web软件公司工作，公司主要业务为：网站设计、开发、建设，现在需要生成一些内帮助宣传。处理结果要直接展示给用户，要让它看起来是人工写的。', 100,  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'title', 'user', '改写以下内容，让它更符合SEO，更吸引用户，长度不超过30个字：\n{素材标题}', 100,  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'summary', 'system', '假定你在一家Web软件公司工作，公司主要业务为：网站设计、开发、建设，现在需要生成一些内帮助宣传。处理结果要直接展示给用户，要让它看起来是人工写的。', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'summary', 'user', '改写以下内容，让它更符合SEO，更吸引用户：\n{素材标题}', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'description', 'system', '假定你在一家Web软件公司工作，公司主要业务为：网站设计、开发、建设，现在需要生成一些内帮助宣传。处理结果要直接展示给用户，要让它看起来是人工写的。', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+((SELECT UUID()), 'description', 'user', '根据以下内容，生成一篇文章，内容尽可能多：\n{素材标题}', 100, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
 CREATE TABLE `aiwriter_publish` (

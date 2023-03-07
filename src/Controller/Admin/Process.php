@@ -377,12 +377,20 @@ class Process extends Auth
             $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
 
             $serviceProcessTemplate = Be::getService('App.AiWriter.Admin.ProcessTemplate');
-            $titleTemplates = $serviceProcessTemplate->getTemplates('title');
-            $summaryTemplates = $serviceProcessTemplate->getTemplates('summary');
-            $descriptionTemplates = $serviceProcessTemplate->getTemplates('description');
-            $response->set('titleTemplates', $titleTemplates);
-            $response->set('summaryTemplates', $summaryTemplates);
-            $response->set('descriptionTemplates', $descriptionTemplates);
+
+            $titleSystemTemplates = $serviceProcessTemplate->getTemplates('title', 'system');
+            $summarySystemTemplates = $serviceProcessTemplate->getTemplates('summary', 'system');
+            $descriptionSystemTemplates = $serviceProcessTemplate->getTemplates('description', 'system');
+            $response->set('titleSystemTemplates', $titleSystemTemplates);
+            $response->set('summarySystemTemplates', $summarySystemTemplates);
+            $response->set('descriptionSystemTemplates', $descriptionSystemTemplates);
+
+            $titleUserTemplates = $serviceProcessTemplate->getTemplates('title', 'user');
+            $summaryUserTemplates = $serviceProcessTemplate->getTemplates('summary', 'user');
+            $descriptionUserTemplates = $serviceProcessTemplate->getTemplates('description', 'user');
+            $response->set('titleUserTemplates', $titleUserTemplates);
+            $response->set('summaryUserTemplates', $summaryUserTemplates);
+            $response->set('descriptionUserTemplates', $descriptionUserTemplates);
 
             $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
             $response->set('formActionUrl', beAdminUrl('AiWriter.Process.create'));
@@ -436,12 +444,20 @@ class Process extends Auth
             $response->set('materialCategoryKeyValues', $materialCategoryKeyValues);
 
             $serviceProcessTemplate = Be::getService('App.AiWriter.Admin.ProcessTemplate');
-            $titleTemplates = $serviceProcessTemplate->getTemplates('title');
-            $summaryTemplates = $serviceProcessTemplate->getTemplates('summary');
-            $descriptionTemplates = $serviceProcessTemplate->getTemplates('description');
-            $response->set('titleTemplates', $titleTemplates);
-            $response->set('summaryTemplates', $summaryTemplates);
-            $response->set('descriptionTemplates', $descriptionTemplates);
+
+            $titleSystemTemplates = $serviceProcessTemplate->getTemplates('title', 'system');
+            $summarySystemTemplates = $serviceProcessTemplate->getTemplates('summary', 'system');
+            $descriptionSystemTemplates = $serviceProcessTemplate->getTemplates('description', 'system');
+            $response->set('titleSystemTemplates', $titleSystemTemplates);
+            $response->set('summarySystemTemplates', $summarySystemTemplates);
+            $response->set('descriptionSystemTemplates', $descriptionSystemTemplates);
+
+            $titleUserTemplates = $serviceProcessTemplate->getTemplates('title', 'user');
+            $summaryUserTemplates = $serviceProcessTemplate->getTemplates('summary', 'user');
+            $descriptionUserTemplates = $serviceProcessTemplate->getTemplates('description', 'user');
+            $response->set('titleUserTemplates', $titleUserTemplates);
+            $response->set('summaryUserTemplates', $summaryUserTemplates);
+            $response->set('descriptionUserTemplates', $descriptionUserTemplates);
 
             $response->set('backUrl', beAdminUrl('AiWriter.Process.index'));
             $response->set('formActionUrl', beAdminUrl('AiWriter.Process.edit'));

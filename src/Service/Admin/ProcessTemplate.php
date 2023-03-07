@@ -11,10 +11,10 @@ class ProcessTemplate
      *
      * @return array
      */
-    public function getTemplates($type): array
+    public function getTemplates($type, $role): array
     {
-        $sql = 'SELECT `content` FROM aiwriter_process_template WHERE type=? ORDER BY ordering ASC';
-        return Be::getDb()->getValues($sql, [$type]);
+        $sql = 'SELECT `content` FROM aiwriter_process_template WHERE `type`=? AND `role`=? ORDER BY `ordering` ASC';
+        return Be::getDb()->getValues($sql, [$type, $role]);
     }
 
 }

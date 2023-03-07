@@ -139,6 +139,23 @@
                                     show-word-limit>
                             </el-input>
                         </div>
+                        <div class="be-col-24 be-md-col-auto">
+                            <div class="be-pl-100 be-pt-100"></div>
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            模板：
+                            <el-select @change="insertTemplate('title', 'system')" v-model = "template.title_system">
+                                <?php
+                                foreach ($this->titleSystemTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
+                            </el-select>
+                        </div>
                     </div>
 
                     <div class="be-row be-mt-100">
@@ -167,10 +184,10 @@
                                 <el-button type="primary" size="mini" @click="insertTag('title', '{素材描述}')">{素材描述}</el-button>
                             </div>
                             <div class="be-mt-100">
-                                AI处理模板：
-                                <el-select @change="insertTemplate('title')" v-model = "template.title">
+                                模板：
+                                <el-select @change="insertTemplate('title', 'user')" v-model = "template.title_user">
                                     <?php
-                                    foreach ($this->titleTemplates as $template) {
+                                    foreach ($this->titleUserTemplates as $template) {
                                         echo '<el-option value="';
                                         echo $template;
                                         echo '">';
@@ -247,6 +264,23 @@
                                     show-word-limit>
                             </el-input>
                         </div>
+                        <div class="be-col-24 be-md-col-auto">
+                            <div class="be-pl-100 be-pt-100"></div>
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            模板：
+                            <el-select @change="insertTemplate('summary', 'system')" v-model = "template.summary_system">
+                                <?php
+                                foreach ($this->summarySystemTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
+                            </el-select>
+                        </div>
                     </div>
 
                     <div class="be-row be-mt-100">
@@ -275,10 +309,10 @@
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
                             </div>
                             <div class="be-mt-100">
-                                AI处理模板：
-                                <el-select @change="insertTemplate('summary')" v-model = "template.summary">
+                                模板：
+                                <el-select @change="insertTemplate('summary', 'user')" v-model = "template.summary_user">
                                     <?php
-                                    foreach ($this->summaryTemplates as $template) {
+                                    foreach ($this->summaryUserTemplates as $template) {
                                         echo '<el-option value="';
                                         echo $template;
                                         echo '">';
@@ -331,6 +365,23 @@
                                     show-word-limit>
                             </el-input>
                         </div>
+                        <div class="be-col-24 be-md-col-auto">
+                            <div class="be-pl-100 be-pt-100"></div>
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            模板：
+                            <el-select @change="insertTemplate('description', 'system')" v-model = "template.description_system">
+                                <?php
+                                foreach ($this->descriptionSystemTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
+                            </el-select>
+                        </div>
                     </div>
 
 
@@ -361,9 +412,9 @@
                             </div>
                             <div class="be-mt-100">
                                 AI处理模板：
-                                <el-select @change="insertTemplate('description')" v-model = "template.description">
+                                <el-select @change="insertTemplate('description', 'user')" v-model = "template.description_user">
                                     <?php
-                                    foreach ($this->descriptionTemplates as $template) {
+                                    foreach ($this->descriptionUserTemplates as $template) {
                                         echo '<el-option value="';
                                         echo $template;
                                         echo '">';
@@ -401,9 +452,12 @@
             data: {
                 formData: <?php echo json_encode($formData); ?>,
                 template: {
-                    title: "",
-                    summary: "",
-                    description: "",
+                    title_system: "",
+                    title_user: "",
+                    summary_system: "",
+                    summary_user: "",
+                    description_system: "",
+                    description_user: "",
                 },
                 loading: false,
                 t: false
@@ -412,9 +466,14 @@
                 ?>
             },
             methods: {
-                insertTemplate: function (e) {
-                    this.formData.details[e].ai_user_prompt = this.template[e].replace("<br>", "\n");
-                    this.template[e] = "";
+                insertTemplate: function (type, role) {
+                    let field = type + "_" + role;
+                    if (role === "system") {
+                        this.formData.details[field].ai_system_prompt = this.template[field].replace("<br>", "\n");
+                    } else {
+                        this.formData.details[field].ai_user_prompt = this.template[field].replace("<br>", "\n");
+                    }
+                    this.template[field] = "";
                 },
                 insertTag: function (e, tag) {
                     this.formData.details[e].ai_user_prompt += tag;

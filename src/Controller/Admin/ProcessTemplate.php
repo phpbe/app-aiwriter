@@ -33,6 +33,11 @@ class ProcessTemplate extends Auth
             'description' => '描述',
         ];
 
+        $roleKeyValues = [
+            'system' => '系统',
+            'user' => '用户',
+        ];
+
         Be::getAdminPlugin('Curd')->setting([
             'label' => 'AI处理模板',
             'table' => 'aiwriter_process_template',
@@ -54,6 +59,16 @@ class ProcessTemplate extends Auth
                             'keyValues' => \Be\Util\Arr::merge([
                                 'all' => '全部',
                             ], $typeKeyValues),
+                            'nullValue' => 'all',
+                            'defaultValue' => 'all',
+                        ],
+                        [
+                            'name' => 'role',
+                            'label' => '角色',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => \Be\Util\Arr::merge([
+                                'all' => '全部',
+                            ], $roleKeyValues),
                             'nullValue' => 'all',
                             'defaultValue' => 'all',
                         ],
@@ -104,7 +119,13 @@ class ProcessTemplate extends Auth
                             'name' => 'type',
                             'label' => '类型',
                             'keyValues' => $typeKeyValues,
-                            'width' => '120',
+                            'width' => '80',
+                        ],
+                        [
+                            'name' => 'role',
+                            'label' => '角色',
+                            'keyValues' => $roleKeyValues,
+                            'width' => '80',
                         ],
                         [
                             'name' => 'content',
@@ -185,6 +206,14 @@ class ProcessTemplate extends Auth
                             'required' => true,
                         ],
                         [
+                            'name' => 'role',
+                            'label' => '角色',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => $roleKeyValues,
+                            'defaultValue' => 'system',
+                            'required' => true,
+                        ],
+                        [
                             'name' => 'content',
                             'driver' => FormItemInputTextArea::class,
                             'label' => '内容',
@@ -213,6 +242,13 @@ class ProcessTemplate extends Auth
                             'label' => '类型',
                             'driver' => FormItemSelect::class,
                             'keyValues' => $typeKeyValues,
+                            'required' => true,
+                        ],
+                        [
+                            'name' => 'role',
+                            'label' => '角色',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => $roleKeyValues,
                             'required' => true,
                         ],
                         [
@@ -246,6 +282,11 @@ class ProcessTemplate extends Auth
                             'name' => 'type',
                             'label' => '类型',
                             'keyValues' => $typeKeyValues,
+                        ],
+                        [
+                            'name' => 'role',
+                            'label' => '色色',
+                            'keyValues' => $roleKeyValues,
                         ],
                         [
                             'name' => 'content',
