@@ -34,8 +34,8 @@ class ProcessTemplate extends Auth
         ];
 
         $roleKeyValues = [
-            'system' => '系统',
-            'user' => '用户',
+            'system' => '系统提示语',
+            'user' => '用户提示语',
         ];
 
         Be::getAdminPlugin('Curd')->setting([
@@ -45,6 +45,16 @@ class ProcessTemplate extends Auth
                 'title' => 'AI处理模板',
                 'orderBy' => 'create_time',
                 'orderByDir' => 'DESC',
+
+                'tab' => [
+                    'name' => 'role',
+                    'value' => Be::getRequest()->request('role', 'user'),
+                    'counter' => true,
+                    'keyValues' => [
+                        'system' => '系统提示语',
+                        'user' => '用户提示语',
+                    ],
+                ],
 
                 'form' => [
                     'items' => [
@@ -59,16 +69,6 @@ class ProcessTemplate extends Auth
                             'keyValues' => \Be\Util\Arr::merge([
                                 'all' => '全部',
                             ], $typeKeyValues),
-                            'nullValue' => 'all',
-                            'defaultValue' => 'all',
-                        ],
-                        [
-                            'name' => 'role',
-                            'label' => '角色',
-                            'driver' => FormItemSelect::class,
-                            'keyValues' => \Be\Util\Arr::merge([
-                                'all' => '全部',
-                            ], $roleKeyValues),
                             'nullValue' => 'all',
                             'defaultValue' => 'all',
                         ],
@@ -119,12 +119,6 @@ class ProcessTemplate extends Auth
                             'name' => 'type',
                             'label' => '类型',
                             'keyValues' => $typeKeyValues,
-                            'width' => '80',
-                        ],
-                        [
-                            'name' => 'role',
-                            'label' => '角色',
-                            'keyValues' => $roleKeyValues,
                             'width' => '80',
                         ],
                         [
