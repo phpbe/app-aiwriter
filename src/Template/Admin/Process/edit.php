@@ -143,7 +143,7 @@
                             <div class="be-pl-100 be-pt-100"></div>
                         </div>
                         <div class="be-col-24 be-md-col">
-                            模板：
+                            使用模板：
                             <el-select @change="insertTemplate('title', 'system')" v-model = "template.title_system">
                                 <?php
                                 foreach ($this->titleSystemTemplates as $template) {
@@ -178,13 +178,7 @@
                         </div>
                         <div class="be-col-24 be-md-col">
                             <div>
-                                插入标签：
-                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材标题}')">{素材标题}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材摘要}')">{素材摘要}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材描述}')">{素材描述}</el-button>
-                            </div>
-                            <div class="be-mt-100">
-                                模板：
+                                使用模板：
                                 <el-select @change="insertTemplate('title', 'user')" v-model = "template.title_user">
                                     <?php
                                     foreach ($this->titleUserTemplates as $template) {
@@ -196,6 +190,12 @@
                                     }
                                     ?>
                                 </el-select>
+                            </div>
+                            <div class="be-mt-100">
+                                插入标签：
+                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材标题}')">{素材标题}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材摘要}')">{素材摘要}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材描述}')">{素材描述}</el-button>
                             </div>
                         </div>
                     </div>
@@ -268,7 +268,7 @@
                             <div class="be-pl-100 be-pt-100"></div>
                         </div>
                         <div class="be-col-24 be-md-col">
-                            模板：
+                            使用模板：
                             <el-select @change="insertTemplate('summary', 'system')" v-model = "template.summary_system">
                                 <?php
                                 foreach ($this->summarySystemTemplates as $template) {
@@ -303,13 +303,7 @@
                         </div>
                         <div class="be-col-24 be-md-col">
                             <div>
-                                插入标签：
-                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材标题}')">{素材标题}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材摘要}')">{素材摘要}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
-                            </div>
-                            <div class="be-mt-100">
-                                模板：
+                                使用模板：
                                 <el-select @change="insertTemplate('summary', 'user')" v-model = "template.summary_user">
                                     <?php
                                     foreach ($this->summaryUserTemplates as $template) {
@@ -321,6 +315,12 @@
                                     }
                                     ?>
                                 </el-select>
+                            </div>
+                            <div class="be-mt-100">
+                                插入标签：
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材标题}')">{素材标题}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材摘要}')">{素材摘要}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
                             </div>
                         </div>
                     </div>
@@ -369,7 +369,7 @@
                             <div class="be-pl-100 be-pt-100"></div>
                         </div>
                         <div class="be-col-24 be-md-col">
-                            模板：
+                            使用模板：
                             <el-select @change="insertTemplate('description', 'system')" v-model = "template.description_system">
                                 <?php
                                 foreach ($this->descriptionSystemTemplates as $template) {
@@ -405,13 +405,7 @@
                         </div>
                         <div class="be-col-24 be-md-col">
                             <div>
-                                插入标签：
-                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材标题}')">{素材标题}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材摘要}')">{素材摘要}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材描述}')">{素材描述}</el-button>
-                            </div>
-                            <div class="be-mt-100">
-                                AI处理模板：
+                                使用模板：
                                 <el-select @change="insertTemplate('description', 'user')" v-model = "template.description_user">
                                     <?php
                                     foreach ($this->descriptionUserTemplates as $template) {
@@ -423,6 +417,12 @@
                                     }
                                     ?>
                                 </el-select>
+                            </div>
+                            <div class="be-mt-100">
+                                插入标签：
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材标题}')">{素材标题}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材摘要}')">{素材摘要}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材描述}')">{素材描述}</el-button>
                             </div>
                         </div>
                     </div>

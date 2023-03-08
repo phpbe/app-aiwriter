@@ -48,7 +48,7 @@ class ProcessTemplate extends Auth
 
                 'tab' => [
                     'name' => 'role',
-                    'value' => Be::getRequest()->request('role', 'user'),
+                    'value' => Be::getRequest()->request('role', 'system'),
                     'counter' => true,
                     'keyValues' => [
                         'system' => '系统提示语',
