@@ -217,9 +217,9 @@ class Process extends Task
             }
 
             if (Be::getRuntime()->isSwooleMode()) {
-                \Swoole\Coroutine::sleep(3);
+                \Swoole\Coroutine::sleep(5);
             } else {
-                sleep(3);
+                sleep(5);
             }
 
             $times++;
