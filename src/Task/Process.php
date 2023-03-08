@@ -36,14 +36,14 @@ class Process extends Task
             }
 
             if ($materialCount === 0) {
-                break;
+                continue;
             }
 
             $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE process_id = ?';
             $processContentCount = Be::getDb()->getValue($sql, [$process->id]);
 
             if ($processContentCount >= $materialCount) {
-                break;
+                continue;
             }
 
             if ($process->material_category_id === 'all') {
@@ -55,7 +55,7 @@ class Process extends Task
             }
 
             if (count($materials) === 0) {
-                break;
+                continue;
             }
 
             $processDetails = unserialize($process->details);

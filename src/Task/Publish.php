@@ -32,21 +32,21 @@ class Publish extends Task
             $sql = 'SELECT COUNT(*) FROM aiwriter_process_content WHERE process_id = ?';
             $processContentCount = $db->getValue($sql, [$publish->process_id]);
             if ($processContentCount === 0) {
-                break;
+                continue;
             }
 
             $sql = 'SELECT COUNT(*) FROM aiwriter_publish_content WHERE publish_id = ?';
             $publishContentCount = Be::getDb()->getValue($sql, [$publish->id]);
 
             if ($publishContentCount >= $processContentCount) {
-                break;
+                continue;
             }
 
             $sql = 'SELECT t1.* FROM aiwriter_process_content t1 LEFT JOIN aiwriter_publish_content t2 ON t1.id=t2.process_content_id AND t1.process_id=? AND t2.publish_id=? WHERE t2.id is NULL';
             $processContents = $db->getObjects($sql, [$publish->process_id, $publish->id]);
 
             if (count($processContents) === 0) {
-                break;
+                continue;
             }
 
             $postHeaders = unserialize($publish->post_headers);
