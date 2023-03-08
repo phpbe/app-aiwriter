@@ -216,128 +216,6 @@
 
                 <div class="be-row be-mt-300">
                     <div class="be-col-24 be-md-col-auto">
-                        摘要：
-                    </div>
-                    <div class="be-col-24 be-md-col-auto">
-                        <div class="be-pl-50 be-pt-100"></div>
-                    </div>
-                    <div class="be-col-24 be-md-col">
-                        <el-radio v-model="formData.details.summary.type" label="material">取用素材摘要</el-radio>
-                        <el-radio v-model="formData.details.summary.type" label="extract">从最终描述中提取</el-radio>
-                        <el-radio v-model="formData.details.summary.type" label="ai">AI处理</el-radio>
-                    </div>
-                </div>
-                <div class="be-row be-mt-100" v-if="formData.details.summary.type === 'extract'">
-                    <div class="be-col-24 be-md-col-auto be-lh-250">
-                        提取长度：
-                    </div>
-                    <div class="be-col-24 be-md-col-auto">
-                        <div class="be-pl-50 be-pt-100"></div>
-                    </div>
-                    <div class="be-col-24 be-md-col">
-                        <el-input-number
-                            :precision="0"
-                            :step="1"
-                            :max="500"
-                            maxlength="6"
-                            placeholder="请输入提取长度"
-                            v-model.number="formData.details.summary.extract"
-                            size="medium">
-                        </el-input-number>
-                        个汉字
-                    </div>
-                </div>
-                <div class="be-mt-100" v-if="formData.details.summary.type === 'ai'">
-
-                    <div class="be-row">
-                        <div class="be-col-24 be-md-col-auto">
-                            系统提示语：
-                        </div>
-                        <div class="be-col-24 be-md-col">
-                            <el-input
-                                    type="textarea"
-                                    :autosize="{minRows:4,maxRows:12}"
-                                    placeholder="请输入AI处理系统提示语"
-                                    v-model = "formData.details.summary.ai_system_prompt"
-                                    size="medium"
-                                    maxlength="500"
-                                    show-word-limit>
-                            </el-input>
-                        </div>
-                        <div class="be-col-24 be-md-col-auto">
-                            <div class="be-pl-100 be-pt-100"></div>
-                        </div>
-                        <div class="be-col-24 be-md-col">
-                            使用模板：
-                            <el-select @change="insertTemplate('summary', 'system')" v-model = "template.summary_system">
-                                <?php
-                                foreach ($this->summarySystemTemplates as $template) {
-                                    echo '<el-option value="';
-                                    echo $template;
-                                    echo '">';
-                                    echo $template;
-                                    echo '</el-option>';
-                                }
-                                ?>
-                            </el-select>
-                        </div>
-                    </div>
-
-                    <div class="be-row be-mt-100">
-                        <div class="be-col-24 be-md-col-auto">
-                            用户提示语：
-                        </div>
-                        <div class="be-col-24 be-md-col">
-                            <el-input
-                                type="textarea"
-                                :autosize="{minRows:4,maxRows:12}"
-                                placeholder="请输入AI处理提问内容"
-                                v-model = "formData.details.summary.ai_user_prompt"
-                                size="medium"
-                                maxlength="500"
-                                show-word-limit>
-                            </el-input>
-                        </div>
-                        <div class="be-col-24 be-md-col-auto">
-                            <div class="be-pl-100 be-pt-100"></div>
-                        </div>
-                        <div class="be-col-24 be-md-col">
-                            <div>
-                                使用模板：
-                                <el-select @change="insertTemplate('summary', 'user')" v-model = "template.summary_user">
-                                    <?php
-                                    foreach ($this->summaryUserTemplates as $template) {
-                                        echo '<el-option value="';
-                                        echo $template;
-                                        echo '">';
-                                        echo $template;
-                                        echo '</el-option>';
-                                    }
-                                    ?>
-                                </el-select>
-                            </div>
-                            <div class="be-mt-100">
-                                插入标签：
-                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材标题}')">{素材标题}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材摘要}')">{素材摘要}</el-button>
-                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php
-                if (!$this->process) {
-                    $formData['details']['summary'] = [
-                        'type' => 'extract',
-                        'extract' => 120,
-                        'ai_system_prompt' => "",
-                        'ai_user_prompt' => "",
-                    ];
-                }
-                ?>
-
-                <div class="be-row be-mt-300">
-                    <div class="be-col-24 be-md-col-auto">
                         描述：
                     </div>
                     <div class="be-col-24 be-md-col-auto">
@@ -423,6 +301,7 @@
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材摘要}')">{素材摘要}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材描述}')">{素材描述}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{标题}')">{标题}</el-button>
                             </div>
                         </div>
                     </div>
@@ -436,6 +315,132 @@
                     ];
                 }
                 ?>
+
+
+                <div class="be-row be-mt-300">
+                    <div class="be-col-24 be-md-col-auto">
+                        摘要：
+                    </div>
+                    <div class="be-col-24 be-md-col-auto">
+                        <div class="be-pl-50 be-pt-100"></div>
+                    </div>
+                    <div class="be-col-24 be-md-col">
+                        <el-radio v-model="formData.details.summary.type" label="material">取用素材摘要</el-radio>
+                        <el-radio v-model="formData.details.summary.type" label="extract">从最终描述中提取</el-radio>
+                        <el-radio v-model="formData.details.summary.type" label="ai">AI处理</el-radio>
+                    </div>
+                </div>
+                <div class="be-row be-mt-100" v-if="formData.details.summary.type === 'extract'">
+                    <div class="be-col-24 be-md-col-auto be-lh-250">
+                        提取长度：
+                    </div>
+                    <div class="be-col-24 be-md-col-auto">
+                        <div class="be-pl-50 be-pt-100"></div>
+                    </div>
+                    <div class="be-col-24 be-md-col">
+                        <el-input-number
+                                :precision="0"
+                                :step="1"
+                                :max="500"
+                                maxlength="6"
+                                placeholder="请输入提取长度"
+                                v-model.number="formData.details.summary.extract"
+                                size="medium">
+                        </el-input-number>
+                        个汉字
+                    </div>
+                </div>
+                <div class="be-mt-100" v-if="formData.details.summary.type === 'ai'">
+
+                    <div class="be-row">
+                        <div class="be-col-24 be-md-col-auto">
+                            系统提示语：
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{minRows:4,maxRows:12}"
+                                    placeholder="请输入AI处理系统提示语"
+                                    v-model = "formData.details.summary.ai_system_prompt"
+                                    size="medium"
+                                    maxlength="500"
+                                    show-word-limit>
+                            </el-input>
+                        </div>
+                        <div class="be-col-24 be-md-col-auto">
+                            <div class="be-pl-100 be-pt-100"></div>
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            使用模板：
+                            <el-select @change="insertTemplate('summary', 'system')" v-model = "template.summary_system">
+                                <?php
+                                foreach ($this->summarySystemTemplates as $template) {
+                                    echo '<el-option value="';
+                                    echo $template;
+                                    echo '">';
+                                    echo $template;
+                                    echo '</el-option>';
+                                }
+                                ?>
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <div class="be-row be-mt-100">
+                        <div class="be-col-24 be-md-col-auto">
+                            用户提示语：
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{minRows:4,maxRows:12}"
+                                    placeholder="请输入AI处理提问内容"
+                                    v-model = "formData.details.summary.ai_user_prompt"
+                                    size="medium"
+                                    maxlength="500"
+                                    show-word-limit>
+                            </el-input>
+                        </div>
+                        <div class="be-col-24 be-md-col-auto">
+                            <div class="be-pl-100 be-pt-100"></div>
+                        </div>
+                        <div class="be-col-24 be-md-col">
+                            <div>
+                                使用模板：
+                                <el-select @change="insertTemplate('summary', 'user')" v-model = "template.summary_user">
+                                    <?php
+                                    foreach ($this->summaryUserTemplates as $template) {
+                                        echo '<el-option value="';
+                                        echo $template;
+                                        echo '">';
+                                        echo $template;
+                                        echo '</el-option>';
+                                    }
+                                    ?>
+                                </el-select>
+                            </div>
+                            <div class="be-mt-100">
+                                插入标签：
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材标题}')">{素材标题}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材摘要}')">{素材摘要}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{标题}')">{标题}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{描述}')">{描述}</el-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                if (!$this->process) {
+                    $formData['details']['summary'] = [
+                        'type' => 'extract',
+                        'extract' => 120,
+                        'ai_system_prompt' => "",
+                        'ai_user_prompt' => "",
+                    ];
+                }
+                ?>
+
             </div>
 
         </el-form>

@@ -61,6 +61,8 @@ class Process extends Task
             $processDetails = unserialize($process->details);
             foreach ($materials as $material) {
 
+                $content = new \stdClass();
+
                 try {
                     $title = '';
                     switch ($processDetails['title']['type']) {
@@ -68,7 +70,7 @@ class Process extends Task
                             $title = $material->title;
                             break;
                         case 'ai':
-                            $messages = $this->formatAiMessages($processDetails['title'], $material);
+                            $messages = $this->formatAiMessages($processDetails['title'], $material, $content);
                             $title = $this->chatCompletion($messages);
                             break;
                     }
@@ -77,18 +79,21 @@ class Process extends Task
                     $title = ltrim($title, ",.;?，、。；？ \t\n\r\0\x0B");
                     $title = trim($title);
 
+                    $content->title = $title;
+
                     $description = '';
                     switch ($processDetails['description']['type']) {
                         case 'material':
                             $description = $material->description;
                             break;
                         case 'ai':
-                            $messages = $this->formatAiMessages($processDetails['description'], $material);
+                            $messages = $this->formatAiMessages($processDetails['description'], $material, $content);
                             $description = $this->chatCompletion($messages);
                             break;
                     }
                     $description = ltrim($description, ",.;?，、。；？ \t\n\r\0\x0B");
                     $description = trim($description);
+                    $content->description = $description;
                     $description = nl2br($description);
 
                     $summary = '';
@@ -111,7 +116,7 @@ class Process extends Task
                             }
                             break;
                         case 'ai':
-                            $messages = $this->formatAiMessages($processDetails['summary'], $material);
+                            $messages = $this->formatAiMessages($processDetails['summary'], $material, $content);
                             $summary = $this->chatCompletion($messages);
                             break;
                     }
@@ -143,9 +148,10 @@ class Process extends Task
      *
      * @param array $ai
      * @param object $material
+     * @param object $content
      * @return array
      */
-    private function formatAiMessages(array $ai, object $material): array
+    private function formatAiMessages(array $ai, object $material, object $content): array
     {
         $messages = [];
 
@@ -164,6 +170,14 @@ class Process extends Task
         $userPrompt = str_replace('{素材标题}', $material->title, $userPrompt);
         $userPrompt = str_replace('{素材摘要}', $material->summary, $userPrompt);
         $userPrompt = str_replace('{素材描述}', $material->description, $userPrompt);
+
+        if (isset($content->title)) {
+            $userPrompt = str_replace('{标题}', $content->title, $userPrompt);
+        }
+
+        if (isset($content->description)) {
+            $userPrompt = str_replace('{描述}', $content->description, $userPrompt);
+        }
 
         $messages[] = [
             'role' => 'user',
