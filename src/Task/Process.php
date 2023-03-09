@@ -212,14 +212,14 @@ class Process extends Task
                 $err = $t;
             }
 
-            if (!$hasError) {
-                break;
-            }
-
             if (Be::getRuntime()->isSwooleMode()) {
                 \Swoole\Coroutine::sleep(5);
             } else {
                 sleep(5);
+            }
+
+            if (!$hasError) {
+                break;
             }
 
             $times++;
