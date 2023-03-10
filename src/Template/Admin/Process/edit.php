@@ -160,7 +160,7 @@
 
                     <div class="be-row be-mt-100">
                         <div class="be-col-24 be-md-col-auto">
-                            用户提示语：
+                            <span class="be-c-red">*</span> 用户提示语：
                         </div>
                         <div class="be-col-24 be-md-col">
                             <el-input
@@ -265,7 +265,7 @@
 
                     <div class="be-row be-mt-100">
                         <div class="be-col-24 be-md-col-auto">
-                            用户提示语：
+                            <span class="be-c-red">*</span> 用户提示语：
                         </div>
                         <div class="be-col-24 be-md-col">
                             <el-input
@@ -388,7 +388,7 @@
 
                     <div class="be-row be-mt-100">
                         <div class="be-col-24 be-md-col-auto">
-                            用户提示语：
+                            <span class="be-c-red">*</span> 用户提示语：
                         </div>
                         <div class="be-col-24 be-md-col">
                             <el-input
