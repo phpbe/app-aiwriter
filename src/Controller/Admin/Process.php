@@ -155,7 +155,12 @@ class Process extends Auth
                             'driver' => TableItemProgress::class,
                             'value' => function ($row) {
                                 if ($row['material_count'] > 0) {
-                                    return round($row['process_count'] * 100 / $row['material_count'], 1);
+                                    $percent = round($row['process_count'] * 100 / $row['material_count'], 1);
+                                    if ($percent > 100) {
+                                        return 100;
+                                    }
+
+                                    return $percent;
                                 } else {
                                     return 100;
                                 }

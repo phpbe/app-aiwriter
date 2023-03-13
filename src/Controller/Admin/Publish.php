@@ -145,7 +145,12 @@ class Publish extends Auth
                             'driver' => TableItemProgress::class,
                             'value' => function ($row) {
                                 if ($row['process_content_count'] > 0) {
-                                    return round($row['publish_count'] * 100 / $row['process_content_count'], 1);
+                                    $percent = round($row['publish_count'] * 100 / $row['process_content_count'], 1);
+                                    if ($percent > 100) {
+                                        return 100;
+                                    }
+
+                                    return $percent;
                                 } else {
                                     return 100;
                                 }
