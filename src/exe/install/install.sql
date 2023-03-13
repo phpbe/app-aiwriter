@@ -6,12 +6,13 @@ CREATE TABLE `aiwriter_material` (
 `title` varchar(120) NOT NULL DEFAULT '' COMMENT '标题',
 `summary` varchar(500) NOT NULL DEFAULT '' COMMENT '摘要',
 `description` mediumtext NOT NULL COMMENT '描述',
-`remark_1` VARCHAR(900) NOT NULL DEFAULT '' COMMENT '备注1',
+`remark_1` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '备注1',
 `remark_2` VARCHAR(900) NOT NULL DEFAULT '' COMMENT '备注2',
 `remark_3` VARCHAR(900) NOT NULL DEFAULT '' COMMENT '备注3',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='素材';
+
 
 
 ALTER TABLE `aiwriter_material`

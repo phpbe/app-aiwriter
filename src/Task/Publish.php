@@ -74,7 +74,7 @@ class Publish extends Task
                                 case 'field':
                                     $field = $mapping['field'];
                                     if (substr($field, 0, 9) === 'material.') {
-                                        
+
                                         if (!$material) {
                                             throw new TaskException('原始素材（' . $processContent->material_id . '）不存在！');
                                         }
