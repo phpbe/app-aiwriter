@@ -3,7 +3,6 @@
 namespace Be\App\AiWriter\Controller\Admin;
 
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
-use Be\AdminPlugin\Detail\Item\DetailItemProgress;
 use Be\AdminPlugin\Detail\Item\DetailItemSwitch;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemLink;

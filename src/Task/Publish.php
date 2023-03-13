@@ -58,6 +58,14 @@ class Publish extends Task
             foreach ($processContents as $processContent) {
 
                 try {
+                    $sql = 'SELECT * FROM aiwriter_material WHERE id = ?';
+                    $material = $db->getObject($sql, [$processContent->material_id]);
+
+                    /*
+                    if (!$material) {
+                        throw new TaskException('原始素材（' . $processContent->material_id . '）不存在！');
+                    }
+                    */
 
                     if ($publish->post_data_type === 'mapping') {
                         $postData = [];
@@ -65,7 +73,16 @@ class Publish extends Task
                             switch ($mapping['value_type']) {
                                 case 'field':
                                     $field = $mapping['field'];
-                                    $postData[$mapping['name']] = $processContent->$field;
+                                    if (substr($field, 0, 9) === 'material.') {
+                                        
+                                        if (!$material) {
+                                            throw new TaskException('原始素材（' . $processContent->material_id . '）不存在！');
+                                        }
+
+                                        $postData[$mapping['name']] = $material->$field;
+                                    } else {
+                                        $postData[$mapping['name']] = $processContent->$field;
+                                    }
                                     break;
                                 case 'custom':
                                     $postData[$mapping['name']] = $mapping['custom'];
@@ -73,8 +90,8 @@ class Publish extends Task
                             }
                         }
                     } else {
-                        $postDataCodeFn = eval('return function($row){' . $publish->post_data_code . '};');
-                        $postData = $postDataCodeFn($processContent);
+                        $postDataCodeFn = eval('return function($row, $material){' . $publish->post_data_code . '};');
+                        $postData = $postDataCodeFn($processContent, $material);
                     }
 
                     if ($publish->post_format === 'form') {

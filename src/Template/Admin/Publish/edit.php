@@ -337,12 +337,24 @@
                         <div class="be-col">
                             <div v-show="mapping.value_type === 'field'">
                                 <el-select v-model="mapping.field" size="medium">
-                                    <el-option label="ID" value="id"></el-option>
-                                    <el-option label="标题" value="title"></el-option>
-                                    <el-option label="摘要" value="summary"></el-option>
-                                    <el-option label="描述" value="description"></el-option>
-                                    <el-option label="创建时间" value="create_time"></el-option>
-                                    <el-option label="更新时间" value="update_time"></el-option>
+                                    <el-option label="加工结果 - ID" value="id"></el-option>
+                                    <el-option label="加工结果 - 标题" value="title"></el-option>
+                                    <el-option label="加工结果 - 摘要" value="summary"></el-option>
+                                    <el-option label="加工结果 - 描述" value="description"></el-option>
+                                    <el-option label="加工结果 - 创建时间" value="create_time"></el-option>
+                                    <el-option label="加工结果 - 更新时间" value="update_time"></el-option>
+
+                                    <el-option label="素材 - ID" value="material.id"></el-option>
+                                    <el-option label="素材 - 分类ID" value="material.category_id"></el-option>
+                                    <el-option label="素材 - 唯一键" value="material.unique_key"></el-option>
+                                    <el-option label="素材 - 标题" value="material.title"></el-option>
+                                    <el-option label="素材 - 摘要" value="material.summary"></el-option>
+                                    <el-option label="素材 - 描述" value="material.description"></el-option>
+                                    <el-option label="素材 - 备注1" value="material.remark_1"></el-option>
+                                    <el-option label="素材 - 备注2" value="material.remark_2"></el-option>
+                                    <el-option label="素材 - 备注3" value="material.remark_3"></el-option>
+                                    <el-option label="素材 - 创建时间" value="material.create_time"></el-option>
+                                    <el-option label="素材 - 更新时间" value="material.update_time"></el-option>
                                 </el-select>
                             </div>
                             <div v-show="mapping.value_type === 'custom'">
@@ -370,7 +382,7 @@
                             [
                                 'name' => 'unique_key',
                                 'value_type' => 'field',
-                                'field' => 'id',
+                                'field' => 'material.unique_key',
                                 'custom' => '',
                             ],
                             [
@@ -417,7 +429,7 @@
                             } else {
 
                                 $code = '$arr = [];' . "\n";
-                                $code .= '$arr[\'unique_key\'] = $row->id;' . "\n";
+                                $code .= '$arr[\'unique_key\'] = $material->unique_key;' . "\n";
                                 $code .= '$arr[\'title\'] = $row->title;' . "\n";
                                 $code .= '$arr[\'summary\'] = $row->summary;' . "\n";
                                 $code .= '$arr[\'description\'] = $row->description;' . "\n";
@@ -435,7 +447,7 @@
                             <div class="be-pl-100"></div>
                         </div>
                         <div class="be-col">
-                            参数 $row 为加工好的素材，结构如下：
+                            参数 $row 为加工好的数据，结构如下：
                             <pre><?php
                             $row = (object)[
                                 'id' => '00e9e677-b801-11ed-a779-04d9f5f8b7ed',
@@ -448,6 +460,24 @@
                                 'update_time' => '2023-03-01 15:17:12',
                             ];
                             print_r($row);
+                            ?></pre>
+
+                            参数 $material 为原始素材，结构如下：
+                            <pre><?php
+                            $material = (object)[
+                                'id' => 'b2786be4-af66-11ed-b252-04d9f5f8b7ed',
+                                'category_id' => 'c6c9ffca-af3a-11ed-b252-04d9f5f8b7ed',
+                                'unique_key' => '唯一键',
+                                'title' => '标题',
+                                'summary' => '摘要',
+                                'description' => '描述',
+                                'remark_1' => '备注1',
+                                'remark_2' => '备注2',
+                                'remark_3' => '备注3',
+                                'create_time' => '2023-02-18 16:31:50',
+                                'update_time' => '2023-02-18 16:31:50',
+                            ];
+                            print_r($material);
                             ?></pre>
                         </div>
                     </div>

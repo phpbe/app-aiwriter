@@ -284,6 +284,60 @@ class Material extends Auth
                                 'toolbar_sticky_offset' => 0
                             ],
                         ],
+                        [
+                            'name' => 'remark_1',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注1',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_2',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注2',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_3',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注3',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_4',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注4',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_5',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注5',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_6',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注6',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
                     ]
                 ],
             ],
@@ -331,6 +385,33 @@ class Material extends Auth
                             'driver' => FormItemTinymce::class,
                             'option' => [
                                 'toolbar_sticky_offset' => 0
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_1',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注1',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_2',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注2',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_3',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注3',
+                            'ui' => [
+                                'maxlength' => 900,
+                                'show-word-limit' => true,
                             ],
                         ],
                     ]
@@ -383,6 +464,18 @@ class Material extends Auth
                             'name' => 'description',
                             'label' => '描述',
                             'driver' => DetailItemHtml::class,
+                        ],
+                        [
+                            'name' => 'remark_1',
+                            'label' => '备注1',
+                        ],
+                        [
+                            'name' => 'remark_2',
+                            'label' => '备注2',
+                        ],
+                        [
+                            'name' => 'remark_3',
+                            'label' => '备注3',
                         ],
                         [
                             'name' => 'process_count',
@@ -438,6 +531,18 @@ class Material extends Auth
                             'name' => 'description',
                             'label' => '描述',
                         ],
+                        [
+                            'name' => 'remark_1',
+                            'label' => '备注1',
+                        ],
+                        [
+                            'name' => 'remark_2',
+                            'label' => '备注2',
+                        ],
+                        [
+                            'name' => 'remark_3',
+                            'label' => '备注3',
+                        ],
                     ],
                 ],
                 'events' => [
@@ -485,6 +590,18 @@ class Material extends Auth
                     [
                         'name' => 'description',
                         'label' => '描述',
+                    ],
+                    [
+                        'name' => 'remark_1',
+                        'label' => '备注1',
+                    ],
+                    [
+                        'name' => 'remark_2',
+                        'label' => '备注2',
+                    ],
+                    [
+                        'name' => 'remark_3',
+                        'label' => '备注3',
                     ],
                     [
                         'name' => 'create_time',

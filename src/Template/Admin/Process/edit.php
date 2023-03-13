@@ -196,6 +196,9 @@
                                 <el-button type="primary" size="mini" @click="insertTag('title', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('title', '{素材摘要}')">{素材摘要}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('title', '{素材描述}')">{素材描述}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材备注1}')">{素材备注1}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材备注2}')">{素材备注2}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('title', '{素材备注3}')">{素材备注3}</el-button>
                             </div>
                         </div>
                     </div>
@@ -301,6 +304,9 @@
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材摘要}')">{素材摘要}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材描述}')">{素材描述}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材备注1}')">{素材备注1}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材备注2}')">{素材备注2}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('description', '{素材备注3}')">{素材备注3}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{标题}')">{标题}</el-button>
                             </div>
                         </div>
@@ -424,6 +430,9 @@
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{素材摘要}')">{素材摘要}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{素材描述}')">{素材描述}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材备注1}')">{素材备注1}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材备注2}')">{素材备注2}</el-button>
+                                <el-button type="primary" size="mini" @click="insertTag('summary', '{素材备注3}')">{素材备注3}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{标题}')">{标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{描述}')">{描述}</el-button>
                             </div>

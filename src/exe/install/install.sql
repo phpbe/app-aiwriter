@@ -2,13 +2,17 @@
 CREATE TABLE `aiwriter_material` (
 `id` varchar(36) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID',
-`unique_key` varchar(200) NOT NULL COMMENT '唯一键',
+`unique_key` varchar(300) NOT NULL COMMENT '唯一键',
 `title` varchar(120) NOT NULL DEFAULT '' COMMENT '标题',
 `summary` varchar(500) NOT NULL DEFAULT '' COMMENT '摘要',
 `description` mediumtext NOT NULL COMMENT '描述',
+`remark_1` VARCHAR(900) NOT NULL DEFAULT '' COMMENT '备注1',
+`remark_2` VARCHAR(900) NOT NULL DEFAULT '' COMMENT '备注2',
+`remark_3` VARCHAR(900) NOT NULL DEFAULT '' COMMENT '备注3',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='素材';
+
 
 ALTER TABLE `aiwriter_material`
 ADD PRIMARY KEY (`id`),
