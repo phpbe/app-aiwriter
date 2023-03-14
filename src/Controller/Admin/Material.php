@@ -316,7 +316,7 @@ class Material extends Auth
                             'driver' => FormItemInputTextArea::class,
                             'label' => '备注4',
                             'ui' => [
-                                'maxlength' => 900,
+                                'maxlength' => 65535,
                                 'show-word-limit' => true,
                             ],
                         ],
@@ -325,7 +325,7 @@ class Material extends Auth
                             'driver' => FormItemInputTextArea::class,
                             'label' => '备注5',
                             'ui' => [
-                                'maxlength' => 900,
+                                'maxlength' => 65535,
                                 'show-word-limit' => true,
                             ],
                         ],
@@ -334,7 +334,7 @@ class Material extends Auth
                             'driver' => FormItemInputTextArea::class,
                             'label' => '备注6',
                             'ui' => [
-                                'maxlength' => 900,
+                                'maxlength' => 65535,
                                 'show-word-limit' => true,
                             ],
                         ],
@@ -414,6 +414,33 @@ class Material extends Auth
                                 'show-word-limit' => true,
                             ],
                         ],
+                        [
+                            'name' => 'remark_4',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注4',
+                            'ui' => [
+                                'maxlength' => 65535,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_5',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注5',
+                            'ui' => [
+                                'maxlength' => 65535,
+                                'show-word-limit' => true,
+                            ],
+                        ],
+                        [
+                            'name' => 'remark_6',
+                            'driver' => FormItemInputTextArea::class,
+                            'label' => '备注6',
+                            'ui' => [
+                                'maxlength' => 65535,
+                                'show-word-limit' => true,
+                            ],
+                        ],
                     ]
                 ],
                 'events' => [
@@ -476,6 +503,18 @@ class Material extends Auth
                         [
                             'name' => 'remark_3',
                             'label' => '备注3',
+                        ],
+                        [
+                            'name' => 'remark_4',
+                            'label' => '备注4',
+                        ],
+                        [
+                            'name' => 'remark_5',
+                            'label' => '备注5',
+                        ],
+                        [
+                            'name' => 'remark_6',
+                            'label' => '备注6',
                         ],
                         [
                             'name' => 'process_count',
@@ -543,6 +582,18 @@ class Material extends Auth
                             'name' => 'remark_3',
                             'label' => '备注3',
                         ],
+                        [
+                            'name' => 'remark_4',
+                            'label' => '备注4',
+                        ],
+                        [
+                            'name' => 'remark_5',
+                            'label' => '备注5',
+                        ],
+                        [
+                            'name' => 'remark_6',
+                            'label' => '备注6',
+                        ],
                     ],
                 ],
                 'events' => [
@@ -602,6 +653,18 @@ class Material extends Auth
                     [
                         'name' => 'remark_3',
                         'label' => '备注3',
+                    ],
+                    [
+                        'name' => 'remark_4',
+                        'label' => '备注4',
+                    ],
+                    [
+                        'name' => 'remark_5',
+                        'label' => '备注5',
+                    ],
+                    [
+                        'name' => 'remark_6',
+                        'label' => '备注6',
                     ],
                     [
                         'name' => 'create_time',
