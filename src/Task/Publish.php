@@ -43,7 +43,7 @@ class Publish extends Task
             }
 
             $sql = 'SELECT t1.* FROM aiwriter_process_content t1 LEFT JOIN aiwriter_publish_content t2 ON t1.id=t2.process_content_id AND t2.publish_id=? WHERE t1.process_id=? AND t2.id is NULL';
-            $processContents = $db->getObjects($sql, [$publish->process_id, $publish->id]);
+            $processContents = $db->getObjects($sql, [$publish->id, $publish->process_id]);
 
             if (count($processContents) === 0) {
                 continue;
