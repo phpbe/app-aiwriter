@@ -79,6 +79,8 @@ class Publish extends Task
                                             throw new TaskException('原始素材（' . $processContent->material_id . '）不存在！');
                                         }
 
+                                        $field = substr($field, 9);
+
                                         $postData[$mapping['name']] = $material->$field;
                                     } else {
                                         $postData[$mapping['name']] = $processContent->$field;
