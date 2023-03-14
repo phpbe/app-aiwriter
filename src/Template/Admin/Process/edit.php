@@ -191,7 +191,7 @@
                                     ?>
                                 </el-select>
                             </div>
-                            <div class="be-mt-100">
+                            <div class="be-mt-100 be-lh-250">
                                 插入标签：
                                 <el-button type="primary" size="mini" @click="insertTag('title', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('title', '{素材摘要}')">{素材摘要}</el-button>
@@ -302,7 +302,7 @@
                                     ?>
                                 </el-select>
                             </div>
-                            <div class="be-mt-100">
+                            <div class="be-mt-100 be-lh-250">
                                 插入标签：
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('description', '{素材摘要}')">{素材摘要}</el-button>
@@ -431,7 +431,7 @@
                                     ?>
                                 </el-select>
                             </div>
-                            <div class="be-mt-100">
+                            <div class="be-mt-100 be-lh-250">
                                 插入标签：
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{素材标题}')">{素材标题}</el-button>
                                 <el-button type="primary" size="mini" @click="insertTag('summary', '{素材摘要}')">{素材摘要}</el-button>
