@@ -419,7 +419,7 @@
 
                     <div class="be-row">
                         <div class="be-col">
-                            <pre>function (object $row) {</pre>
+                            <pre>function (object $row, object $material) {</pre>
                             <?php
                             $driver = new \Be\AdminPlugin\Form\Item\FormItemCode([
                                 'name' => 'post_data_code',
