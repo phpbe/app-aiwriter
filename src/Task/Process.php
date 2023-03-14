@@ -173,6 +173,9 @@ class Process extends Task
         $userPrompt = str_replace('{素材备注1}', $material->remark_1, $userPrompt);
         $userPrompt = str_replace('{素材备注2}', $material->remark_2, $userPrompt);
         $userPrompt = str_replace('{素材备注3}', $material->remark_3, $userPrompt);
+        $userPrompt = str_replace('{素材备注4}', $material->remark_4, $userPrompt);
+        $userPrompt = str_replace('{素材备注5}', $material->remark_5, $userPrompt);
+        $userPrompt = str_replace('{素材备注6}', $material->remark_6, $userPrompt);
 
         if (isset($content->title)) {
             $userPrompt = str_replace('{标题}', $content->title, $userPrompt);

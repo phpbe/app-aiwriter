@@ -353,6 +353,9 @@
                                     <el-option label="素材 - 备注1" value="material.remark_1"></el-option>
                                     <el-option label="素材 - 备注2" value="material.remark_2"></el-option>
                                     <el-option label="素材 - 备注3" value="material.remark_3"></el-option>
+                                    <el-option label="素材 - 备注4" value="material.remark_4"></el-option>
+                                    <el-option label="素材 - 备注5" value="material.remark_5"></el-option>
+                                    <el-option label="素材 - 备注6" value="material.remark_6"></el-option>
                                     <el-option label="素材 - 创建时间" value="material.create_time"></el-option>
                                     <el-option label="素材 - 更新时间" value="material.update_time"></el-option>
                                 </el-select>
@@ -474,6 +477,9 @@
                                 'remark_1' => '备注1',
                                 'remark_2' => '备注2',
                                 'remark_3' => '备注3',
+                                'remark_4' => '备注4',
+                                'remark_5' => '备注5',
+                                'remark_6' => '备注6',
                                 'create_time' => '2023-02-18 16:31:50',
                                 'update_time' => '2023-02-18 16:31:50',
                             ];
