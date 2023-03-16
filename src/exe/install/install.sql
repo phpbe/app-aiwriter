@@ -100,7 +100,7 @@ CREATE TABLE `aiwriter_publish` (
 `post_data_type` varchar(30) NOT NULL DEFAULT 'mapping' COMMENT  '数据处理方法（mapping/code）',
 `post_data_mapping` text NOT NULL COMMENT  '数据处理-映射',
 `post_data_code` text NOT NULL COMMENT  '数据处理-代码',
-`success_mark` varchar(60) NOT NULL DEFAULT 'mapping' COMMENT  '成功标识',
+`success_mark` varchar(60) NOT NULL DEFAULT '' COMMENT  '成功标识',
 `interval` int(11) NOT NULL DEFAULT '1000' COMMENT '间隔时间（毫秒）',
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否有效',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

@@ -581,7 +581,7 @@
                 cancel: function () {
                     window.onbeforeunload = null;
                     window.location.href = "<?php echo $this->backUrl; ?>";
-                },
+                }
 
                 <?php
                 echo $uiItems->getVueMethods();
