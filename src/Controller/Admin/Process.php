@@ -206,6 +206,18 @@ class Process extends Auth
                             ],
                             [
                                 'label' => '',
+                                'tooltip' => '复制',
+                                'ui' => [
+                                    'type' => 'success',
+                                    ':underline' => 'false',
+                                    'style' => 'font-size: 20px;',
+                                ],
+                                'icon' => 'el-icon-copy-document',
+                                'task' => 'copy',
+                                'target' => 'ajax',
+                            ],
+                            [
+                                'label' => '',
                                 'tooltip' => '删除',
                                 'ui' => [
                                     'type' => 'danger',
@@ -219,6 +231,20 @@ class Process extends Auth
                             ],
                         ]
                     ],
+                ],
+            ],
+
+            'copy' => [
+                'events' => [
+                    'before' => function ($tuple) {
+                        $i = 2;
+                        do {
+                            $name = $tuple->name . '-' . $i;
+                            $count =  Be::getTable('aiwriter_process')->where('name', $name)->count();
+                        } while($count > 0);
+
+                        $tuple->name = $name;
+                    },
                 ],
             ],
 
