@@ -543,7 +543,8 @@ class Material extends Auth
                             'name' => 'category_id',
                             'label' => '分类',
                             'value' => function($row) use($categoryKeyValues) {
-                                return $categoryKeyValues[$row['category_id']] ?? '';
+                                $keyValues = array_flip($categoryKeyValues);
+                                return $keyValues[$row['category_id']] ?? '';
                             }
                         ],
                         [
